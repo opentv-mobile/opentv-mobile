@@ -4,6 +4,13 @@ What might come after 1.0. Nothing here is promised — it's a list of direction
 of how often they come up. Suggestions and pull requests are welcome; open an issue first for
 anything large.
 
+## Fixes
+
+- **Provider type picker hides "Stalker portal" in portrait** — the three type buttons on the Add
+  provider screen don't fit one row on a phone, and users miss the third one (it only shows once
+  the phone is turned). Replace them with a full-width three-way selector with short labels:
+  Xtream / M3U / Stalker.
+
 ## Next
 
 - **Local M3U files** — pick a `.m3u`/`.m3u8` from the phone instead of typing a URL. The file is
