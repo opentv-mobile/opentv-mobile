@@ -16,6 +16,10 @@ anything large.
 - **Local M3U files** — pick a `.m3u`/`.m3u8` from the phone instead of typing a URL. The file is
   copied into the app and can be re-imported when you have a newer one (a local file can't
   refresh itself the way a URL does).
+- **Movie and series playback controls** ([#1](https://github.com/opentv-mobile/opentv-mobile/issues/1))
+  — bring live TV's Fit / Fill / Stretch options and Picture-in-Picture to on-demand playback,
+  and add portrait / landscape, automatic rotation, and orientation locking. Arbitrary rotation
+  of the video image is outside the planned scope.
 - **Programme guide on the phone** — a touch-friendly grid (swipe through time) alongside the
   now/next list.
 - **Paging for huge film/series libraries** — load "All" shelves and grids incrementally.
