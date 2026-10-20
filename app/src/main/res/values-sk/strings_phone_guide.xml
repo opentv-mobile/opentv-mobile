@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">Zoznam</string>
+    <string name="phone_guide_guide">Program</string>
+    <string name="phone_guide_layout">Zobrazenie živej TV v telefóne</string>
+    <string name="phone_guide_now">Teraz</string>
+    <string name="phone_guide_previous_day">Predchádzajúci deň</string>
+    <string name="phone_guide_next_day">Nasledujúci deň</string>
+    <string name="phone_guide_details">Podrobnosti</string>
+</resources>

@@ -12,10 +12,12 @@ app/src/main/java/app/opentv/
 │   ├── model/      Domain models, which double as Room entities
 │   ├── db/         Room database and DAOs
 │   ├── remote/     XtreamApi — the provider panel client
+│   ├── local/      Private snapshots of user-selected local playlists
 │   ├── parser/     M3uParser, XmltvParser — pure, streaming, heavily tested
-│   ├── repo/       SourceRepository, CatalogRepository, EpgRepository
+│   ├── repo/       SourceRepository, CatalogRepository, EpgRepository, VodBrowseRepository
 │   └── work/       SyncWorker — periodic background refresh
 ├── player/         PlayerController, PlaybackErrors
+├── widget/         Recent-channel widget and ID-only app handoff
 └── ui/             Compose screens and view models
 ```
 
@@ -25,8 +27,9 @@ stranger with a broken channel being able to find the relevant code in under fiv
 
 ## No backend. At all.
 
-OpenTV has no server. There is no account, no login, no cloud sync, no web dashboard for
-editing your channel list from a browser.
+OpenTV has no service operated by the project. There is no account or hosted cloud backend. The
+optional browser manager is served directly by the user's device on the local network, and optional
+device sync is direct or uses storage owned by the user.
 
 This is the single most important architectural decision in the project, and it is worth being
 explicit about why, because a web dashboard is a genuinely nice feature and users ask for it.
@@ -40,8 +43,8 @@ service that no longer exists.
 
 So OpenTV stores everything on the device, in SQLite. The consequences are accepted honestly:
 
-- Setting up a second TV means entering your details again. This is a real cost.
-- Favourites and channel ordering do not follow you between devices.
+- Without opting into local/NAS sync, setting up a second device means entering details again and
+  user state remains local. This is a real cost.
 
 And what is bought with it:
 
@@ -52,6 +55,43 @@ And what is bought with it:
 If multi-device setup becomes painful enough, the answer is **export/import of a settings file**
 — or, at most, optional sync through storage the *user* already owns and pays for. Never a
 service the project has to fund.
+
+## Local playlists are immutable snapshots
+
+The Android document picker grants temporary read access. `LocalPlaylistStore` copies the selected
+`.m3u`/`.m3u8` into app-private storage, validates the complete copy, parses it, then publishes the
+source and catalogue in one Room transaction. A failed or cancelled import deletes only the new
+temporary snapshot. A successful re-import commits first and deletes the previous private copy
+afterwards, so it cannot replace a working catalogue with a partial one.
+
+Local playlists accept IPTV entries with absolute remote stream URLs; local media paths and HLS
+media manifests are rejected. They cannot refresh themselves, so catalogue refresh workers skip
+them. An explicitly configured remote XMLTV URL remains independent and can still refresh.
+
+## Large VOD catalogues page from Room
+
+`VodBrowseRepository` builds Paging 3 flows over Room `PagingSource`s. Browse cards do not load all
+variants into memory: SQL returns one logical movie group per row and variants are fetched only when
+a card is opened. A category key is `(sourceId, categoryId)`, because provider-local IDs routinely
+collide. The Compose grid saves its viewport by filter key, restoring it after a detail screen but
+starting at the top for a genuinely different provider/category filter.
+
+## Player display policy is shared, orientation is session state
+
+Live and VOD use the same persisted Media3 resize mode for Fit, Fill and Stretch. Orientation is
+different: `PlayerOrientationSession` starts in landscape for each playback destination and can be
+changed to portrait, system rotation or the physical rotation captured by Lock. PiP and multi-window
+resizes never rewrite that policy. PiP entry requires actual playback; when neither the activity nor
+its PiP window is visible, playback is no longer allowed to continue invisibly.
+
+## The home widget exposes IDs, not streams
+
+The recent-channel widget reads a bounded projection without stream URLs, portal commands,
+credentials or programme metadata. It filters parental categories before rendering and validates
+the channel again when tapped. The launcher hands only a channel ID to `MainActivity`; the app then
+resolves it, gives the explicit request priority over resume-last behaviour and applies the normal
+recording and parental checks. Deleting a source therefore leaves no playable URL embedded in a
+stale widget row.
 
 ## The EPG, and why it is written the way it is
 

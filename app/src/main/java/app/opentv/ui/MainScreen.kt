@@ -45,7 +45,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.ui.semantics.Role
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -204,42 +207,51 @@ fun MainScreen(
     // Phones get a touch shell: a top app bar for the global actions and a bottom tab bar, so the
     // full portrait width goes to the content instead of a TV-sized side rail.
     if (LocalLayoutClass.current == LayoutClass.PHONE) {
-        Column(Modifier.fillMaxSize().statusBarsPadding()) {
-            PhoneTopBar(
-                isSyncing = isSyncing,
-                onRefresh = onRefresh,
-                // The top-bar search starts in the scope of the tab you're on.
-                onOpenSearch = {
-                    onOpenSearch(
-                        when (tab) {
-                            Tab.MOVIES -> "movies"
-                            Tab.SHOWS -> "series"
-                            else -> "all"
-                        },
-                    )
+        val landscape = isPhoneLandscape()
+        val scopedSearch = {
+            onOpenSearch(
+                when (tab) {
+                    Tab.MOVIES -> "movies"
+                    Tab.SHOWS -> "series"
+                    else -> "all"
                 },
-                onOpenSettings = onOpenSettings,
-                onOpenProfiles = onOpenProfiles,
-                activeProfileName = activeProfileName,
             )
-            Box(Modifier.weight(1f).fillMaxWidth()) { content() }
-            StatusBar()
-            NavigationBar {
-                visibleTabs.forEach { t ->
-                    NavigationBarItem(
-                        selected = tab == t,
-                        onClick = { tab = t },
-                        icon = { Icon(t.icon, contentDescription = null) },
-                        // Five tabs on a narrow phone: the smaller label keeps "Grabaciones" whole.
-                        label = {
-                            Text(
-                                stringResource(t.labelRes),
-                                style = MaterialTheme.typography.labelSmall,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        },
-                    )
+        }
+        // The browsing destination supplies and consumes safe insets around the entire shell,
+        // including either rail, content and bottom navigation (not just the background).
+        Row(Modifier.fillMaxSize()) {
+            if (landscape) {
+                PhoneLandscapeRail(visibleTabs, tab, { tab = it }, isSyncing, onRefresh,
+                    scopedSearch, onOpenSettings, onOpenProfiles, activeProfileName)
+            }
+            Column(Modifier.weight(1f).fillMaxHeight()) {
+                if (!landscape) PhoneTopBar(
+                    isSyncing = isSyncing,
+                    onRefresh = onRefresh,
+                    onOpenSearch = scopedSearch,
+                    onOpenSettings = onOpenSettings,
+                    onOpenProfiles = onOpenProfiles,
+                    activeProfileName = activeProfileName,
+                )
+                Box(Modifier.weight(1f).fillMaxWidth()) { content() }
+                StatusBar()
+                if (!landscape) NavigationBar {
+                    visibleTabs.forEach { t ->
+                        NavigationBarItem(
+                            selected = tab == t,
+                            onClick = { tab = t },
+                            icon = { Icon(t.icon, contentDescription = null) },
+                            // Five tabs on a narrow phone: keep "Grabaciones" whole.
+                            label = {
+                                Text(
+                                    stringResource(t.labelRes),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            },
+                        )
+                    }
                 }
             }
         }
@@ -264,6 +276,48 @@ fun MainScreen(
         Box(Modifier.weight(1f).fillMaxHeight()) { content() }
       }
       StatusBar()
+    }
+}
+
+/** Two touch-sized strips keep navigation and global actions visible without a top/bottom bar. */
+@Composable
+internal fun PhoneLandscapeRail(
+    tabs: List<Tab>, current: Tab, onSelect: (Tab) -> Unit,
+    isSyncing: Boolean, onRefresh: () -> Unit, onOpenSearch: () -> Unit,
+    onOpenSettings: () -> Unit, onOpenProfiles: () -> Unit, activeProfileName: String,
+) {
+    Row(
+        Modifier.width(112.dp).fillMaxHeight().padding(horizontal = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        // Scroll independently on very short viewports; tabs cannot push actions off screen.
+        Column(Modifier.width(48.dp).fillMaxHeight().verticalScroll(rememberScrollState())) {
+            tabs.forEach { t ->
+                Box(Modifier.size(48.dp).clip(RoundedCornerShape(16.dp))
+                    .background(if (current == t) MaterialTheme.colorScheme.secondaryContainer else androidx.compose.ui.graphics.Color.Transparent)
+                    .selectable(selected = current == t, role = Role.Tab, onClick = { onSelect(t) }),
+                    contentAlignment = Alignment.Center) {
+                    Icon(t.icon, stringResource(t.labelRes))
+                }
+            }
+        }
+        Column(Modifier.width(48.dp).fillMaxHeight().verticalScroll(rememberScrollState())) {
+            IconButton(onClick = onOpenSearch, modifier = Modifier.size(48.dp)) {
+                Icon(Icons.Filled.Search, contentDescription = stringResource(R.string.nav_search))
+            }
+            IconButton(onClick = onRefresh, enabled = !isSyncing, modifier = Modifier.size(48.dp)) {
+                Icon(Icons.Filled.Refresh, contentDescription = stringResource(R.string.phone_refresh))
+                if (isSyncing) {
+                    CircularProgressIndicator(Modifier.size(28.dp), strokeWidth = 2.dp)
+                }
+            }
+            IconButton(onClick = onOpenProfiles, modifier = Modifier.size(48.dp)) {
+                Icon(Icons.Filled.Person, contentDescription = activeProfileName)
+            }
+            IconButton(onClick = onOpenSettings, modifier = Modifier.size(48.dp)) {
+                Icon(Icons.Filled.Settings, contentDescription = stringResource(R.string.nav_settings))
+            }
+        }
     }
 }
 
@@ -312,6 +366,7 @@ private fun PhoneTopBar(
  */
 @Composable
 private fun StatusBar() {
+    val compact = isPhoneLandscape()
     val message by StatusBus.message.collectAsState()
     val progress by StatusBus.progress.collectAsState()
     val text = message ?: return
@@ -341,6 +396,8 @@ private fun StatusBar() {
                 text,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = if (compact) 1 else Int.MAX_VALUE,
+                overflow = TextOverflow.Ellipsis,
             )
         }
         if (p != null) {

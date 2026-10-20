@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Pokaż hasło</string>
     <string name="search_recent">Ostatnie wyszukiwania</string>
     <string name="search_recent_clear">Wyczyść</string>
-    <string name="settings_auto_rotate_subtitle">Wideo zawsze odtwarzane w poziomie. Wł.: menu i listy też obracają się z telefonem (z uwzględnieniem blokady obracania).</string>
+    <string name="settings_auto_rotate_subtitle">Wł. (domyślnie): menu i listy stosują ustawienie obrotu Androida. Wył.: nawigacja telefonu pozostaje pionowa. Obrót odtwarzacza jest sterowany oddzielnie.</string>
     <string name="settings_auto_rotate_title">Obracaj z telefonem</string>
     <string name="settings_edit_provider_title">Edytuj dostawcę</string>
     <string name="upd_available">Dostępna aktualizacja</string>

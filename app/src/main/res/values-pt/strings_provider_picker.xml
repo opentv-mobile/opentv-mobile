@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="provider_picker_xtream">Xtream</string>
+    <string name="provider_picker_m3u">M3U</string>
+    <string name="provider_picker_stalker">Stalker</string>
+</resources>

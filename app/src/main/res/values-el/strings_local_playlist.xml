@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">URL λίστας</string>
+    <string name="local_playlist_file">Τοπικό αρχείο</string>
+    <string name="local_playlist_choose">Επιλογή αρχείου M3U</string>
+    <string name="local_playlist_import">Εισαγωγή</string>
+    <string name="local_playlist_reimport">Επανεισαγωγή</string>
+    <string name="local_playlist_importing">Εισαγωγή λίστας…</string>
+    <string name="local_playlist_selected">Επιλέχθηκε νέο αρχείο</string>
+    <string name="local_playlist_help">Εισαγάγετε λίστα IPTV .m3u ή .m3u8 (έως 50 MiB). Υποστηρίζονται μόνο απομακρυσμένα URL ροών, όχι τοπικά πολυμέσα ή αρχεία περιγραφής HLS. Αποθηκεύεται ιδιωτικό αντίγραφο· οι αλλαγές απαιτούν επανεισαγωγή. Ορίστε URL οδηγού προγράμματος αν χρειάζεται.</string>
+    <string name="local_playlist_error">Η εισαγωγή απέτυχε. Επιλέξτε έγκυρη, μη κενή λίστα IPTV M3U. Η προηγούμενη λίστα παραμένει αμετάβλητη.</string>
+    <string name="local_playlist_too_large">Η λίστα υπερβαίνει τα 50 MiB. Η προηγούμενη λίστα παραμένει αμετάβλητη.</string>
+    <string name="local_playlist_remote_only">Χρησιμοποιήστε λίστα καναλιών IPTV με απόλυτα απομακρυσμένα URL, όχι αρχείο περιγραφής HLS ή τοπικά πολυμέσα. Η προηγούμενη λίστα παραμένει αμετάβλητη.</string>
+</resources>

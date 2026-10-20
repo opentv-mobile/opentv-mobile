@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">Danh sách</string>
+    <string name="phone_guide_guide">Lịch phát sóng</string>
+    <string name="phone_guide_layout">Bố cục TV trực tiếp trên điện thoại</string>
+    <string name="phone_guide_now">Bây giờ</string>
+    <string name="phone_guide_previous_day">Ngày trước</string>
+    <string name="phone_guide_next_day">Ngày sau</string>
+    <string name="phone_guide_details">Chi tiết</string>
+</resources>

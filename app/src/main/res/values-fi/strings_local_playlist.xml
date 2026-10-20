@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">Soittolistan URL</string>
+    <string name="local_playlist_file">Paikallinen tiedosto</string>
+    <string name="local_playlist_choose">Valitse M3U-tiedosto</string>
+    <string name="local_playlist_import">Tuo</string>
+    <string name="local_playlist_reimport">Tuo uudelleen</string>
+    <string name="local_playlist_importing">Tuodaan soittolistaa…</string>
+    <string name="local_playlist_selected">Uusi tiedosto valittu</string>
+    <string name="local_playlist_help">Tuo .m3u- tai .m3u8-muotoinen IPTV-lista (enintään 50 MiB). Vain etävirtojen URL-osoitteita tuetaan, ei paikallisia mediatiedostoja tai HLS-manifesteja. Yksityinen kopio tallennetaan; muutokset vaativat uuden tuonnin. Anna ohjelmaoppaan URL tarvittaessa.</string>
+    <string name="local_playlist_error">Tuonti epäonnistui. Valitse kelvollinen, ei-tyhjä M3U-IPTV-lista. Aiempi soittolista säilyy ennallaan.</string>
+    <string name="local_playlist_too_large">Soittolista ylittää 50 MiB. Aiempi soittolista säilyy ennallaan.</string>
+    <string name="local_playlist_remote_only">Käytä IPTV-kanavalistaa, jossa on absoluuttiset etä-URL-osoitteet, ei HLS-manifestia tai paikallisia mediatiedostoja. Aiempi soittolista säilyy ennallaan.</string>
+</resources>

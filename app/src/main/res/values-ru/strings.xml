@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Показать пароль</string>
     <string name="search_recent">Недавние запросы</string>
     <string name="search_recent_clear">Очистить</string>
-    <string name="settings_auto_rotate_subtitle">Видео всегда воспроизводится в альбомной ориентации. Вкл.: меню и списки тоже поворачиваются с телефоном (с учётом блокировки поворота).</string>
+    <string name="settings_auto_rotate_subtitle">Вкл. (по умолчанию): меню и списки следуют настройке поворота Android. Выкл.: навигация телефона остаётся портретной. Поворот проигрывателя настраивается отдельно.</string>
     <string name="settings_auto_rotate_title">Поворот вместе с телефоном</string>
     <string name="settings_edit_provider_title">Изменить провайдера</string>
     <string name="upd_available">Доступно обновление</string>

@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import app.opentv.R
 import app.opentv.ui.LayoutClass
 import app.opentv.ui.LocalLayoutClass
+import app.opentv.ui.isPhoneLandscape
 
 /**
  * The one settings entry point. Every other settings surface is reached from here, so there is
@@ -90,19 +91,23 @@ fun SettingsHubScreen(
         HubEntry(Icons.Filled.Info, stringResource(R.string.settings_about_title), stringResource(R.string.settings_about_subtitle), onOpenAbout),
     )
 
+    val compact = isPhoneLandscape()
     Column(
         Modifier
             .fillMaxSize()
             .screenPadding(),
     ) {
-        ScreenHeader(stringResource(R.string.nav_settings), onBack = onBack, icon = Icons.Filled.Tv)
+        if (!compact) ScreenHeader(stringResource(R.string.nav_settings), onBack = onBack, icon = Icons.Filled.Tv)
 
-        Spacer(Modifier.height(20.dp))
+        if (!compact) Spacer(Modifier.height(20.dp))
 
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier.widthIn(max = 760.dp),
         ) {
+            if (compact) item(key = "header") {
+                ScreenHeader(stringResource(R.string.nav_settings), onBack = onBack, icon = Icons.Filled.Tv)
+            }
             items(entries) { entry -> HubRow(entry) }
         }
     }

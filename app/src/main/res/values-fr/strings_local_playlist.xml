@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">URL de la liste</string>
+    <string name="local_playlist_file">Fichier local</string>
+    <string name="local_playlist_choose">Choisir un fichier M3U</string>
+    <string name="local_playlist_import">Importer</string>
+    <string name="local_playlist_reimport">Réimporter</string>
+    <string name="local_playlist_importing">Importation de la liste…</string>
+    <string name="local_playlist_selected">Nouveau fichier sélectionné</string>
+    <string name="local_playlist_help">Importez une liste IPTV .m3u ou .m3u8 (50 Mio maximum). Seules les URL distantes sont acceptées, pas les médias locaux ni les manifestes HLS. Une copie privée est conservée ; les modifications nécessitent une réimportation. Indiquez une URL de guide si nécessaire.</string>
+    <string name="local_playlist_error">Importation impossible. Choisissez une liste IPTV M3U valide et non vide. La liste précédente reste inchangée.</string>
+    <string name="local_playlist_too_large">La liste dépasse 50 Mio. La liste précédente reste inchangée.</string>
+    <string name="local_playlist_remote_only">Utilisez une liste IPTV avec des URL distantes absolues, pas un manifeste HLS ni des médias locaux. La liste précédente reste inchangée.</string>
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">सूची</string>
+    <string name="phone_guide_guide">कार्यक्रम गाइड</string>
+    <string name="phone_guide_layout">फ़ोन पर लाइव टीवी का दृश्य</string>
+    <string name="phone_guide_now">अभी</string>
+    <string name="phone_guide_previous_day">पिछला दिन</string>
+    <string name="phone_guide_next_day">अगला दिन</string>
+    <string name="phone_guide_details">विवरण</string>
+</resources>

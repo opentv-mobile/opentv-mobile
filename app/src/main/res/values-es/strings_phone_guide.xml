@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">Lista</string>
+    <string name="phone_guide_guide">Guía</string>
+    <string name="phone_guide_layout">Vista de TV en el móvil</string>
+    <string name="phone_guide_now">Ahora</string>
+    <string name="phone_guide_previous_day">Día anterior</string>
+    <string name="phone_guide_next_day">Día siguiente</string>
+    <string name="phone_guide_details">Detalles</string>
+</resources>

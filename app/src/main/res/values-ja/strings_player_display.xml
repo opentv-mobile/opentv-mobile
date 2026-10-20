@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">映像サイズ</string>
+    <string name="player_display_fit">全体を表示</string>
+    <string name="player_display_fill">画面を埋める（切り抜き）</string>
+    <string name="player_display_stretch">引き伸ばす</string>
+    <string name="player_display_orientation">画面の向き</string>
+    <string name="player_display_landscape">横向き</string>
+    <string name="player_display_portrait">縦向き</string>
+    <string name="player_display_system">固定解除（システム設定に従う）</string>
+    <string name="player_display_lock">現在の向きに固定</string>
+</resources>

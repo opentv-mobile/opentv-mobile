@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">List</string>
+    <string name="phone_guide_guide">Guide</string>
+    <string name="phone_guide_layout">Phone Live layout</string>
+    <string name="phone_guide_now">Now</string>
+    <string name="phone_guide_previous_day">Previous day</string>
+    <string name="phone_guide_next_day">Next day</string>
+    <string name="phone_guide_details">Details</string>
+</resources>

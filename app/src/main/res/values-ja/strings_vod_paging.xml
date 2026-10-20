@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">ホーム</string>
+    <string name="vod_paging_see_all">すべて表示</string>
+    <string name="vod_paging_loading">作品を読み込み中…</string>
+    <string name="vod_paging_empty">この選択に作品はありません。</string>
+    <string name="vod_paging_error">作品を読み込めませんでした。</string>
+    <string name="vod_paging_retry">再試行</string>
+</resources>

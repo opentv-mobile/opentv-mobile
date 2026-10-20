@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Prikaži lozinku</string>
     <string name="search_recent">Nedavna pretraživanja</string>
     <string name="search_recent_clear">Očisti</string>
-    <string name="settings_auto_rotate_subtitle">Video se uvijek reproducira vodoravno. Uključeno: izbornici i popisi također se zakreću s telefonom (poštujući zaključavanje zakretanja).</string>
+    <string name="settings_auto_rotate_subtitle">Uključeno (zadano): izbornici i popisi prate postavku zakretanja Androida. Isključeno: navigacija telefona ostaje okomita. Zakretanje reproduktora kontrolira se zasebno.</string>
     <string name="settings_auto_rotate_title">Zakreći s telefonom</string>
     <string name="settings_edit_provider_title">Uredi pružatelja</string>
     <string name="upd_available">Dostupno ažuriranje</string>

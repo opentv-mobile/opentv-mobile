@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">Videostørrelse</string>
+    <string name="player_display_fit">Tilpass</string>
+    <string name="player_display_fill">Fyll (beskjær)</string>
+    <string name="player_display_stretch">Strekk</string>
+    <string name="player_display_orientation">Retning</string>
+    <string name="player_display_landscape">Liggende</string>
+    <string name="player_display_portrait">Stående</string>
+    <string name="player_display_system">Lås opp (følg systemet)</string>
+    <string name="player_display_lock">Lås gjeldende retning</string>
+</resources>

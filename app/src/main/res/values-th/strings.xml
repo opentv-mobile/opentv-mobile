@@ -562,7 +562,7 @@
     <string name="recset_pw_show">แสดงรหัสผ่าน</string>
     <string name="search_recent">การค้นหาล่าสุด</string>
     <string name="search_recent_clear">ล้าง</string>
-    <string name="settings_auto_rotate_subtitle">วิดีโอเล่นในแนวนอนเสมอ เปิด: เมนูและรายการหมุนตามโทรศัพท์ด้วย (ตามการล็อกการหมุนของระบบ)</string>
+    <string name="settings_auto_rotate_subtitle">เปิด (ค่าเริ่มต้น): เมนูและรายการใช้การตั้งค่าการหมุนของ Android ปิด: หน้าการนำทางของโทรศัพท์อยู่ในแนวตั้ง การหมุนของเครื่องเล่นควบคุมแยกต่างหาก</string>
     <string name="settings_auto_rotate_title">หมุนตามโทรศัพท์</string>
     <string name="settings_edit_provider_title">แก้ไขผู้ให้บริการ</string>
     <string name="upd_available">มีอัปเดตใหม่</string>

@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Mostrar palavra-passe</string>
     <string name="search_recent">Pesquisas recentes</string>
     <string name="search_recent_clear">Limpar</string>
-    <string name="settings_auto_rotate_subtitle">O vídeo é sempre reproduzido na horizontal. Ligado: menus e listas também rodam com o telemóvel (respeitando o bloqueio de rotação).</string>
+    <string name="settings_auto_rotate_subtitle">Ligado (predefinido): menus e listas seguem a definição de rotação do Android. Desligado: a navegação do telemóvel fica na vertical. A rotação do leitor é controlada separadamente.</string>
     <string name="settings_auto_rotate_title">Rodar com o telemóvel</string>
     <string name="settings_edit_provider_title">Editar fornecedor</string>
     <string name="upd_available">Atualização disponível</string>

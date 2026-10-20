@@ -134,6 +134,7 @@ fun HomeScreen(
     val settings = remember { graph.settings }
     val previewEnabled by settings.guidePreviewVideo.collectAsState()
     val channelLayout by settings.channelLayout.collectAsState()
+    val phoneLayout by settings.phoneLiveLayout.collectAsState()
 
     val categories by viewModel.visibleCategoryGroups.collectAsState()
     val allCategories by viewModel.filterableCategoryGroups.collectAsState()
@@ -225,14 +226,14 @@ fun HomeScreen(
     // One muted player, reused. It only ever decodes while the guide is the foreground screen,
     // and is stopped before any hand-off to full-screen, so the box never runs two decoders at
     // once — the thing that used to lock up cheap sticks.
-    val previewScope = remember { CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate) }
-    val previewController = remember {
-        PlayerController(context, previewScope, graph.httpClient, subtitlesEnabled = false, preview = true)
+    val previewScope = remember(isPhone) { CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate) }
+    val previewController = remember(isPhone) {
+        if (isPhone) null else PlayerController(context, previewScope, graph.httpClient, subtitlesEnabled = false, preview = true)
             .also { it.player.volume = 0f }
     }
-    DisposableEffect(Unit) {
+    DisposableEffect(previewController) {
         onDispose {
-            previewController.release()
+            previewController?.release()
             previewScope.cancel()
         }
     }
@@ -245,7 +246,7 @@ fun HomeScreen(
         PlaybackQueue.items = rows.map {
             PlaybackQueue.Item(it.primary.id, it.primary.shownName, it.primary.logoUrl, it.primary.number)
         }
-        previewController.stop()
+        previewController?.stop()
         onPlayChannel(channel)
     }
     fun requestLive(channel: Channel) {
@@ -260,7 +261,7 @@ fun HomeScreen(
                 Lifecycle.Event.ON_RESUME -> screenResumed = true
                 Lifecycle.Event.ON_PAUSE -> {
                     screenResumed = false
-                    previewController.stop()
+                    previewController?.stop()
                 }
                 else -> Unit
             }
@@ -283,7 +284,7 @@ fun HomeScreen(
 
     // Preview audio follows the setting; muted by default so browsing stays quiet.
     LaunchedEffect(previewSound) {
-        previewController.player.volume = if (previewSound) 1f else 0f
+        previewController?.player?.volume = if (previewSound) 1f else 0f
     }
 
     // Tune the preview to the highlighted channel, so it follows the d-pad as you browse — the
@@ -294,12 +295,12 @@ fun HomeScreen(
     LaunchedEffect(highlightedRow?.key, previewEnabled, screenResumed, recordingActive) {
         val row = highlightedRow
         if (isPhone || !previewEnabled || !screenResumed || recordingActive || row == null) {
-            previewController.stop()
+            previewController?.stop()
             return@LaunchedEffect
         }
         val channel = row.primary
         val source = graph.sourceRepository.byId(channel.sourceId)
-        previewController.play(
+        previewController?.play(
             PlayerController.Request(
                 url = channel.streamUrl,
                 title = channel.shownName,
@@ -351,10 +352,19 @@ fun HomeScreen(
             onSelectFavourites = viewModel::selectFavourites,
             onSelectCategory = viewModel::selectCategory,
             onQuery = viewModel::search,
-            onPlay = { requestLive(it.primary) },
-            onLongPress = { channelMenu = it },
-            onToggleFavourite = { viewModel.toggleFavourite(it) },
             emptyContent = emptyContent,
+            layout = phoneLayout,
+            onLayout = settings::setPhoneLiveLayout,
+            listContent = {
+                PhoneGuideChannelList(rows, nowMillis, viewModel,
+                    onPlay = { requestLive(it.primary) }, onDetails = { channelMenu = it },
+                    onFavourite = viewModel::toggleFavourite)
+            },
+            guideContent = {
+                PhoneTouchGuide(rows, nowMillis, viewModel,
+                    onPlay = { requestLive(it.primary) },
+                    onProgramme = { row, programme -> recordTarget = row to programme })
+            },
         )
     } else Row(Modifier.fillMaxSize()) {
 
@@ -476,7 +486,7 @@ fun HomeScreen(
                     onWatch = { highlightedRow?.let { goFullscreen(it.primary) } },
                     onRefresh = onRefresh,
                     onAddSource = onAddSource,
-                    previewPlayer = if (previewEnabled && !recordingActive) previewController.player else null,
+                    previewPlayer = if (previewEnabled && !recordingActive) previewController?.player else null,
                     isRecording = highlightedRow?.primary?.id?.let { id ->
                         activeRecordings.any { it.channelId == id }
                     } == true,

@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">Oynatma listesi URL’si</string>
+    <string name="local_playlist_file">Yerel dosya</string>
+    <string name="local_playlist_choose">M3U dosyası seç</string>
+    <string name="local_playlist_import">İçe aktar</string>
+    <string name="local_playlist_reimport">Yeniden içe aktar</string>
+    <string name="local_playlist_importing">Liste içe aktarılıyor…</string>
+    <string name="local_playlist_selected">Yeni dosya seçildi</string>
+    <string name="local_playlist_help">.m3u veya .m3u8 IPTV listesi içe aktarın (en fazla 50 MiB). Yalnızca uzak yayın URL’leri desteklenir; yerel medya ve HLS manifestleri desteklenmez. Özel bir kopya saklanır; değişiklikler yeniden içe aktarma gerektirir. Gerekirse rehber URL’sini belirtin.</string>
+    <string name="local_playlist_error">İçe aktarılamadı. Geçerli ve boş olmayan bir M3U IPTV listesi seçin. Önceki liste değişmedi.</string>
+    <string name="local_playlist_too_large">Liste 50 MiB sınırını aşıyor. Önceki liste değişmedi.</string>
+    <string name="local_playlist_remote_only">HLS manifesti veya yerel medya yerine mutlak uzak URL’ler içeren bir IPTV kanal listesi kullanın. Önceki liste değişmedi.</string>
+</resources>

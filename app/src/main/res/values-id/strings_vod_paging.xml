@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">Beranda</string>
+    <string name="vod_paging_see_all">Lihat semua</string>
+    <string name="vod_paging_loading">Memuat judul…</string>
+    <string name="vod_paging_empty">Tidak ada judul dalam pilihan ini.</string>
+    <string name="vod_paging_error">Tidak dapat memuat judul.</string>
+    <string name="vod_paging_retry">Coba lagi</string>
+</resources>

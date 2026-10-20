@@ -562,7 +562,7 @@
     <string name="recset_pw_show">パスワードを表示</string>
     <string name="search_recent">最近の検索</string>
     <string name="search_recent_clear">クリア</string>
-    <string name="settings_auto_rotate_subtitle">動画は常に横向きで再生します。オン: メニューや一覧もスマホに合わせて回転します（システムの回転ロックに従います）。</string>
+    <string name="settings_auto_rotate_subtitle">オン（既定）：メニューや一覧は Android の回転設定に従います。オフ：スマホのナビゲーションを縦向きに固定します。プレーヤーの回転は個別に設定します。</string>
     <string name="settings_auto_rotate_title">スマホの向きに合わせて回転</string>
     <string name="settings_edit_provider_title">プロバイダを編集</string>
     <string name="upd_available">アップデートがあります</string>

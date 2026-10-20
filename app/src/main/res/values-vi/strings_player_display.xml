@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">Kích thước video</string>
+    <string name="player_display_fit">Vừa màn hình</string>
+    <string name="player_display_fill">Lấp đầy (cắt bớt)</string>
+    <string name="player_display_stretch">Kéo giãn</string>
+    <string name="player_display_orientation">Hướng màn hình</string>
+    <string name="player_display_landscape">Ngang</string>
+    <string name="player_display_portrait">Dọc</string>
+    <string name="player_display_system">Mở khóa (theo hệ thống)</string>
+    <string name="player_display_lock">Khóa hướng hiện tại</string>
+</resources>

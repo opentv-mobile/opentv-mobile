@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -76,12 +74,12 @@ fun ScreenHeader(
 }
 
 /**
- * Outer padding for a settings-style screen: generous on a TV (overscan), tight on a phone, where
- * it also keeps the content clear of the status and navigation bars (the app draws edge-to-edge).
+ * Design spacing inside the browsing destination's safe viewport: generous on a TV (overscan),
+ * tight on a phone. System/IME insets belong to the destination, not the header or a scrolling item.
  */
 fun Modifier.screenPadding(): Modifier = composed {
     if (LocalLayoutClass.current == LayoutClass.PHONE) {
-        statusBarsPadding().navigationBarsPadding().padding(horizontal = 12.dp, vertical = 4.dp)
+        padding(horizontal = 12.dp, vertical = 4.dp)
     } else {
         padding(horizontal = 32.dp, vertical = 24.dp)
     }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">حجم الفيديو</string>
+    <string name="player_display_fit">احتواء</string>
+    <string name="player_display_fill">ملء (اقتصاص)</string>
+    <string name="player_display_stretch">تمديد</string>
+    <string name="player_display_orientation">الاتجاه</string>
+    <string name="player_display_landscape">أفقي</string>
+    <string name="player_display_portrait">عمودي</string>
+    <string name="player_display_system">إلغاء القفل (اتباع النظام)</string>
+    <string name="player_display_lock">قفل الاتجاه الحالي</string>
+</resources>

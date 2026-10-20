@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Son kanallar</string>
+    <string name="recent_widget_description">Son izlenen kanallara hızlı erişim</string>
+    <string name="recent_widget_empty">Son kanal yok. OpenTV uygulamasını açmak için dokunun.</string>
+</resources>

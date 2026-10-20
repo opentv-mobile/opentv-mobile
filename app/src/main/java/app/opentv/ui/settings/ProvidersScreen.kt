@@ -6,6 +6,10 @@
 package app.opentv.ui.settings
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import app.opentv.data.local.isLocalPlaylist
+import app.opentv.data.local.safePlaylistDisplayName
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -55,6 +59,12 @@ fun ProvidersScreen(
 ) {
     val ui by viewModel.ui.collectAsState()
     var pendingRemove by remember { mutableStateOf<Source?>(null) }
+    var pendingImport by remember { mutableStateOf<Source?>(null) }
+    val filePicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        val source = pendingImport
+        pendingImport = null
+        if (source != null && uri != null) viewModel.importLocal(source, uri)
+    }
 
     Column(
         Modifier
@@ -66,6 +76,7 @@ fun ProvidersScreen(
         }
 
         Spacer(Modifier.height(16.dp))
+        ui.syncMessage?.let { Text(it, style = MaterialTheme.typography.bodyMedium) }
 
         if (ui.sources.isEmpty()) {
             Text(
@@ -85,6 +96,8 @@ fun ProvidersScreen(
                     source = source,
                     confirming = pendingRemove?.id == source.id,
                     onEdit = { onEditSource(source) },
+                    importing = ui.syncing,
+                    onReimport = { pendingImport = source; filePicker.launch(arrayOf("*/*")) },
                     onAskRemove = { pendingRemove = source },
                     onCancelRemove = { pendingRemove = null },
                     onConfirmRemove = {
@@ -103,6 +116,8 @@ private fun ProviderRow(
     source: Source,
     confirming: Boolean,
     onEdit: () -> Unit,
+    importing: Boolean,
+    onReimport: () -> Unit,
     onAskRemove: () -> Unit,
     onCancelRemove: () -> Unit,
     onConfirmRemove: () -> Unit,
@@ -118,7 +133,9 @@ private fun ProviderRow(
                 Column(Modifier.weight(1f)) {
                     Text(source.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
                     Text(
-                        "${source.kind.name} · ${hostOf(source.url)}",
+                        if (source.isLocalPlaylist) stringResource(R.string.local_playlist_file) + " · " +
+                            safePlaylistDisplayName(source.localPlaylistDisplayName)
+                        else "${source.kind.name} · ${hostOf(source.url)}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -134,6 +151,9 @@ private fun ProviderRow(
                     TextButton(onClick = onConfirmRemove) { Text(stringResource(R.string.providers_yes_remove)) }
                     TextButton(onClick = onCancelRemove) { Text(stringResource(R.string.common_cancel)) }
                 } else {
+                    if (source.isLocalPlaylist) {
+                        TextButton(onClick = onReimport, enabled = !importing) { Text(stringResource(R.string.local_playlist_reimport)) }
+                    }
                     TextButton(onClick = onEdit) { Text(stringResource(R.string.common_edit)) }
                     TextButton(onClick = onAskRemove) { Text(stringResource(R.string.common_remove)) }
                 }

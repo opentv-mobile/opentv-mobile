@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">Размер видео</string>
+    <string name="player_display_fit">Вписать</string>
+    <string name="player_display_fill">Заполнить (обрезать)</string>
+    <string name="player_display_stretch">Растянуть</string>
+    <string name="player_display_orientation">Ориентация</string>
+    <string name="player_display_landscape">Альбомная</string>
+    <string name="player_display_portrait">Портретная</string>
+    <string name="player_display_system">Разблокировать (по настройкам системы)</string>
+    <string name="player_display_lock">Зафиксировать текущую ориентацию</string>
+</resources>

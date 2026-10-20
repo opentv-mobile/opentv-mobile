@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Şifreyi göster</string>
     <string name="search_recent">Son aramalar</string>
     <string name="search_recent_clear">Temizle</string>
-    <string name="settings_auto_rotate_subtitle">Video her zaman yatay oynatılır. Açık: menüler ve listeler de telefonla birlikte döner (sistemin döndürme kilidine uyulur).</string>
+    <string name="settings_auto_rotate_subtitle">Açık (varsayılan): menüler ve listeler Android döndürme ayarını izler. Kapalı: telefon gezinmesi dikey kalır. Oynatıcı döndürmesi ayrı kontrol edilir.</string>
     <string name="settings_auto_rotate_title">Telefonla birlikte döndür</string>
     <string name="settings_edit_provider_title">Sağlayıcıyı düzenle</string>
     <string name="upd_available">Güncelleme mevcut</string>

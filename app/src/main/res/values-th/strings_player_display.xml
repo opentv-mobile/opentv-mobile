@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">ขนาดวิดีโอ</string>
+    <string name="player_display_fit">พอดีหน้าจอ</string>
+    <string name="player_display_fill">เต็มหน้าจอ (ครอบตัด)</string>
+    <string name="player_display_stretch">ยืดภาพ</string>
+    <string name="player_display_orientation">การวางแนวหน้าจอ</string>
+    <string name="player_display_landscape">แนวนอน</string>
+    <string name="player_display_portrait">แนวตั้ง</string>
+    <string name="player_display_system">ปลดล็อก (ตามระบบ)</string>
+    <string name="player_display_lock">ล็อกแนวหน้าจอปัจจุบัน</string>
+</resources>

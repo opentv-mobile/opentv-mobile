@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">リスト</string>
+    <string name="phone_guide_guide">番組表</string>
+    <string name="phone_guide_layout">スマートフォンのライブ画面</string>
+    <string name="phone_guide_now">現在</string>
+    <string name="phone_guide_previous_day">前日</string>
+    <string name="phone_guide_next_day">翌日</string>
+    <string name="phone_guide_details">詳細</string>
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">列表</string>
+    <string name="phone_guide_guide">节目指南</string>
+    <string name="phone_guide_layout">手机直播布局</string>
+    <string name="phone_guide_now">现在</string>
+    <string name="phone_guide_previous_day">前一天</string>
+    <string name="phone_guide_next_day">后一天</string>
+    <string name="phone_guide_details">详情</string>
+</resources>

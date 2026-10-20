@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">الرئيسية</string>
+    <string name="vod_paging_see_all">عرض الكل</string>
+    <string name="vod_paging_loading">جارٍ تحميل العناوين…</string>
+    <string name="vod_paging_empty">لا توجد عناوين في هذا التحديد.</string>
+    <string name="vod_paging_error">تعذّر تحميل العناوين.</string>
+    <string name="vod_paging_retry">إعادة المحاولة</string>
+</resources>

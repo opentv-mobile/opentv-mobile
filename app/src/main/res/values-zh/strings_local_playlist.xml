@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">播放列表网址</string>
+    <string name="local_playlist_file">本地文件</string>
+    <string name="local_playlist_choose">选择 M3U 文件</string>
+    <string name="local_playlist_import">导入</string>
+    <string name="local_playlist_reimport">重新导入</string>
+    <string name="local_playlist_importing">正在导入播放列表…</string>
+    <string name="local_playlist_selected">已选择新文件</string>
+    <string name="local_playlist_help">导入 .m3u 或 .m3u8 IPTV 列表（最大 50 MiB）。仅支持远程流的绝对网址，不支持本地媒体或 HLS 清单。应用会保存私有副本；文件更改后需重新导入。如需节目指南，请明确指定其网址。</string>
+    <string name="local_playlist_error">无法导入。请选择有效且非空的 M3U IPTV 列表。原播放列表保持不变。</string>
+    <string name="local_playlist_too_large">播放列表超过 50 MiB。原播放列表保持不变。</string>
+    <string name="local_playlist_remote_only">请使用包含远程绝对网址的 IPTV 频道列表，而非 HLS 清单或本地媒体。原播放列表保持不变。</string>
+</resources>

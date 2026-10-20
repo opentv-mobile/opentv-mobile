@@ -562,7 +562,7 @@
     <string name="recset_pw_show">نمایش گذرواژه</string>
     <string name="search_recent">جستجوهای اخیر</string>
     <string name="search_recent_clear">پاک کردن</string>
-    <string name="settings_auto_rotate_subtitle">ویدیو همیشه افقی پخش می‌شود. روشن: منوها و فهرست‌ها هم با تلفن می‌چرخند (با رعایت قفل چرخش سیستم).</string>
+    <string name="settings_auto_rotate_subtitle">روشن (پیش‌فرض): منوها و فهرست‌ها از تنظیم چرخش Android پیروی می‌کنند. خاموش: پیمایش تلفن عمودی می‌ماند. چرخش پخش‌کننده جداگانه کنترل می‌شود.</string>
     <string name="settings_auto_rotate_title">چرخش همراه با تلفن</string>
     <string name="settings_edit_provider_title">ویرایش ارائه‌دهنده</string>
     <string name="upd_available">به‌روزرسانی موجود است</string>

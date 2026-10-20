@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -57,15 +58,20 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
 import android.content.pm.ActivityInfo
 import app.opentv.core.findActivity
-import app.opentv.ui.LayoutClass
 import app.opentv.ui.LocalLayoutClass
 import app.opentv.ui.rememberLayoutClass
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import app.opentv.core.AppSettings
+import app.opentv.core.PlayerOrientation
+import app.opentv.core.PlayerOrientationSession
+import app.opentv.core.PlayerOrientationTarget
+import app.opentv.core.PipState
+import app.opentv.core.shouldEnterPlayerPip
 import app.opentv.core.ServiceLocator
 import app.opentv.data.parser.displayTitle
 import app.opentv.ui.MainScreen
+import app.opentv.ui.browsingDestination
 import app.opentv.ui.ProfilesViewModel
 import app.opentv.ui.SourcesViewModel
 import app.opentv.ui.channels.ChannelManagerScreen
@@ -93,6 +99,81 @@ import app.opentv.update.UpdateGate
 
 class MainActivity : ComponentActivity() {
 
+    var playerOrientationSession by mutableStateOf(PlayerOrientationSession())
+        private set
+    private var browseAutoRotate = true
+    private fun inPipWindow() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && isInPictureInPictureMode
+    private fun inMultiWindow() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && isInMultiWindowMode
+
+    fun setPlaybackDestination(playing: Boolean, autoRotate: Boolean) {
+        playerOrientationSession = playerOrientationSession.destination(playing)
+        browseAutoRotate = autoRotate
+        applyOrientationPolicy()
+    }
+
+    @Suppress("DEPRECATION")
+    fun selectPlayerOrientation(orientation: PlayerOrientation) {
+        if (!playerOrientationSession.active || inPipWindow() || inMultiWindow()) return
+        val rotation = windowManager.defaultDisplay.rotation
+        val naturalLandscape = if (rotation % 2 == 0)
+            resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        else resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+        playerOrientationSession = playerOrientationSession.select(orientation, rotation, naturalLandscape)
+        applyOrientationPolicy()
+    }
+
+    private fun applyOrientationPolicy() {
+        // Never derive policy from the resized PiP/multi-window configuration, nor write it back.
+        if (isRunningOnTelevision(this) || inPipWindow() || inMultiWindow()) return
+        val session = playerOrientationSession
+        val requested = if (session.active) when (session.target(false, false, false)) {
+            PlayerOrientationTarget.SENSOR_LANDSCAPE -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            PlayerOrientationTarget.SENSOR_PORTRAIT -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            PlayerOrientationTarget.FULL_USER -> ActivityInfo.SCREEN_ORIENTATION_FULL_USER
+            PlayerOrientationTarget.LANDSCAPE -> ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            PlayerOrientationTarget.PORTRAIT -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            PlayerOrientationTarget.REVERSE_LANDSCAPE -> ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+            PlayerOrientationTarget.REVERSE_PORTRAIT -> ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
+            null -> return
+        } else when {
+            // Android observes its rotation lock live; do not snapshot it or use FULL_SENSOR.
+            resources.configuration.smallestScreenWidthDp >= 600 || browseAutoRotate -> ActivityInfo.SCREEN_ORIENTATION_FULL_USER
+            else -> ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT
+        }
+        if (requestedOrientation != requested) requestedOrientation = requested
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        applyOrientationPolicy()
+    }
+
+    override fun onMultiWindowModeChanged(isInMultiWindowMode: Boolean, newConfig: Configuration) {
+        super.onMultiWindowModeChanged(isInMultiWindowMode, newConfig)
+        if (!isInMultiWindowMode) applyOrientationPolicy()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean("player.session", playerOrientationSession.active)
+        outState.putString("player.orientation", playerOrientationSession.orientation.name)
+        outState.putInt("player.rotation", playerOrientationSession.lockedRotation)
+        outState.putBoolean("player.naturalLandscape", playerOrientationSession.naturalLandscape)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        PipState.setActivityVisible(true)
+        PipState.setInPip(inPipWindow())
+    }
+
+    override fun onStop() {
+        // PiP is STARTED while visible. Stopping means even its floating window is gone.
+        PipState.setActivityVisible(false)
+        PipState.setInPip(false)
+        super.onStop()
+    }
+
     // Apply the chosen UI language before any view or resource is resolved. A language change in
     // settings calls recreate(), which re-runs this with the new tag.
     override fun attachBaseContext(newBase: Context) {
@@ -101,8 +182,17 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        savedInstanceState?.let {
+            playerOrientationSession = PlayerOrientationSession(
+                active = it.getBoolean("player.session"),
+                orientation = runCatching { PlayerOrientation.valueOf(it.getString("player.orientation").orEmpty()) }
+                    .getOrDefault(PlayerOrientation.LANDSCAPE),
+                lockedRotation = it.getInt("player.rotation"),
+                naturalLandscape = it.getBoolean("player.naturalLandscape"),
+            )
+        }
         enableEdgeToEdge()
-        handlePlayIntent(intent)
+        if (savedInstanceState == null) handlePlayIntent(intent)
         val isTelevision = isRunningOnTelevision(this)
 
         setContent {
@@ -136,12 +226,16 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handlePlayIntent(intent: Intent?) {
+        // Shared reminder/future widget handoff: accept an ID, never an external stream URL.
+        // The navigation consumer validates that the channel still exists before opening playback.
         val id = intent?.getLongExtra(EXTRA_PLAY_CHANNEL, 0L) ?: 0L
-        if (id != 0L) app.opentv.core.PlayRequests.request(id)
+        if (id > 0L) app.opentv.core.PlayRequests.request(id)
+        intent?.removeExtra(EXTRA_PLAY_CHANNEL)
         val recId = intent?.getLongExtra(EXTRA_WATCH_RECORDING, 0L) ?: 0L
         if (recId != 0L) {
             app.opentv.core.RecordingSignals.requestWatch(recId, System.currentTimeMillis())
         }
+        intent?.removeExtra(EXTRA_WATCH_RECORDING)
     }
 
     // ---- Picture-in-picture ------------------------------------------------------------------
@@ -157,17 +251,17 @@ class MainActivity : ComponentActivity() {
             packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
 
     fun maybeEnterPip() {
-        if (!app.opentv.core.PipState.eligible || !app.opentv.core.PipState.isPlaying) return
         enterPipNow()
     }
 
-    /** Explicit request from the player's PiP button — no eligibility guard, the user asked. */
+    /** Both explicit and Home requests require actual Media3 playback, not merely READY. */
     fun enterPipNow() {
-        if (!supportsPip()) return
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        if (!shouldEnterPlayerPip(PipState.eligible, PipState.isPlaying, supportsPip()) || inPipWindow()) return
         runCatching {
             enterPictureInPictureMode(
                 PictureInPictureParams.Builder()
-                    .setAspectRatio(Rational(16, 9))
+                    .setAspectRatio(Rational((PipState.aspectRatio * 10_000).toInt().coerceIn(4185, 23900), 10_000))
                     .build(),
             )
         }
@@ -181,6 +275,7 @@ class MainActivity : ComponentActivity() {
     ) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
         app.opentv.core.PipState.setInPip(isInPictureInPictureMode)
+        if (!isInPictureInPictureMode) applyOrientationPolicy()
     }
 
     companion object {
@@ -248,23 +343,14 @@ private fun OpenTvApp(isTelevision: Boolean) {
     val activeProfileId by profilesViewModel.activeProfileId.collectAsState()
     val activeProfileName = profiles.firstOrNull { it.id == activeProfileId }?.name ?: "Me"
 
-    // Phones browse in portrait and play in landscape: lock the orientation to whichever the
-    // current screen wants. TVs and tablets keep the manifest's free rotation.
-    val layoutClass = LocalLayoutClass.current
-    val activity = LocalContext.current.findActivity()
+    // Activity is the only orientation writer. Playback policy is session-scoped, never layout-scoped.
+    val activity = LocalContext.current.findActivity() as? MainActivity
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     val autoRotate by ServiceLocator.get(LocalContext.current).settings.phoneAutoRotate.collectAsState()
-    LaunchedEffect(layoutClass, currentRoute, autoRotate) {
-        if (layoutClass != LayoutClass.PHONE || activity == null) return@LaunchedEffect
+    LaunchedEffect(currentRoute, autoRotate) {
+        if (currentRoute == null) return@LaunchedEffect
         val playing = currentRoute == Routes.PLAYER || currentRoute == Routes.VOD_PLAYER
-        activity.requestedOrientation = when {
-            // Video always plays landscape, even with the system rotation lock on — a portrait
-            // player is just a small picture with bars.
-            playing -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            // Browse turning with the phone, still honouring the system rotation lock.
-            autoRotate -> ActivityInfo.SCREEN_ORIENTATION_FULL_USER
-            else -> ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT
-        }
+        activity?.setPlaybackDestination(playing, autoRotate)
     }
 
     // Until the saved sources have loaded from the database, we cannot tell a first run from a
@@ -282,24 +368,13 @@ private fun OpenTvApp(isTelevision: Boolean) {
     // worst possible first impression.
     val start = if (sourcesUi.sources.isEmpty()) Routes.ADD_SOURCE else Routes.HOME
 
-    // Boot to last channel: if enabled and we have one, jump straight into the player on launch.
-    // Runs once; backing out returns to the guide and doesn't re-trigger.
+    // External ID requests and resume-last share fresh privacy/recording validation.
     val bootContext = androidx.compose.ui.platform.LocalContext.current
-    val bootSettings = remember { ServiceLocator.get(bootContext).settings }
-    LaunchedEffect(start) {
-        if (start == Routes.HOME && bootSettings.resumeLastChannel.value && bootSettings.lastChannelId != 0L) {
-            navController.navigate(Routes.player(bootSettings.lastChannelId))
-        }
-    }
-
-    // A tapped reminder notification asks for a specific channel. Consume it so it fires once and
-    // never re-triggers on a later launch.
-    val playRequest by app.opentv.core.PlayRequests.channelId.collectAsState()
-    LaunchedEffect(playRequest) {
-        val id = playRequest
-        if (id != null && id != 0L) {
-            app.opentv.core.PlayRequests.consume()
-            navController.navigate(Routes.player(id))
+    app.opentv.widget.ExternalChannelRequests(start) { id ->
+        navController.navigate(Routes.player(id)) {
+            // Recreate the player so its remembered zap queue is the newly validated one.
+            popUpTo(Routes.PLAYER) { inclusive = true }
+            launchSingleTop = true
         }
     }
 
@@ -336,7 +411,7 @@ private fun OpenTvApp(isTelevision: Boolean) {
 
     Box(Modifier.fillMaxSize()) {
         NavHost(navController = navController, startDestination = start) {
-            composable(Routes.ADD_SOURCE) {
+            browsingDestination(Routes.ADD_SOURCE) {
                 AddSourceScreen(
                     viewModel = sourcesViewModel,
                     onFinished = {
@@ -347,8 +422,8 @@ private fun OpenTvApp(isTelevision: Boolean) {
                 )
             }
 
-            composable(Routes.EDIT_SOURCE) { entry ->
-                val sourceId = entry.arguments?.getString("sourceId")?.toLongOrNull() ?: return@composable
+            browsingDestination(Routes.EDIT_SOURCE) { entry ->
+                val sourceId = entry.arguments?.getString("sourceId")?.toLongOrNull() ?: return@browsingDestination
                 AddSourceScreen(
                     viewModel = sourcesViewModel,
                     editingSourceId = sourceId,
@@ -356,7 +431,7 @@ private fun OpenTvApp(isTelevision: Boolean) {
                 )
             }
 
-            composable(Routes.HOME) {
+            browsingDestination(Routes.HOME) {
                 MainScreen(
                     isTelevision = isTelevision,
                     hasSources = sourcesUi.sources.isNotEmpty(),
@@ -412,14 +487,14 @@ private fun OpenTvApp(isTelevision: Boolean) {
                 )
             }
 
-            composable(Routes.PROFILES) {
+            browsingDestination(Routes.PROFILES) {
                 ProfilesScreen(
                     viewModel = profilesViewModel,
                     onBack = { navController.popBackStack() },
                 )
             }
 
-            composable(Routes.SEARCH) { entry ->
+            browsingDestination(Routes.SEARCH) { entry ->
                 SearchScreen(
                     initialScope = entry.arguments?.getString("scope") ?: "all",
                     onOpenMovie = { movie -> navController.navigate(Routes.movieDetail(movie.id)) },
@@ -439,7 +514,7 @@ private fun OpenTvApp(isTelevision: Boolean) {
                 )
             }
 
-            composable(Routes.SETTINGS_HUB) {
+            browsingDestination(Routes.SETTINGS_HUB) {
                 SettingsHubScreen(
                     onOpenProviders = { navController.navigate(Routes.PROVIDERS) },
                     onOpenAddons = { navController.navigate(Routes.ADDONS) },
@@ -455,27 +530,27 @@ private fun OpenTvApp(isTelevision: Boolean) {
                 )
             }
 
-            composable(Routes.SYNC) {
+            browsingDestination(Routes.SYNC) {
                 SyncScreen(onBack = { navController.popBackStack() })
             }
 
-            composable(Routes.REC_SETTINGS) {
+            browsingDestination(Routes.REC_SETTINGS) {
                 RecordingSettingsScreen(onBack = { navController.popBackStack() })
             }
 
-            composable(Routes.CHANNELS) {
+            browsingDestination(Routes.CHANNELS) {
                 ChannelManagerScreen(onBack = { navController.popBackStack() })
             }
 
-            composable(Routes.WEB_MANAGER) {
+            browsingDestination(Routes.WEB_MANAGER) {
                 WebManagerScreen(onBack = { navController.popBackStack() })
             }
 
-            composable(Routes.PARENTAL) {
+            browsingDestination(Routes.PARENTAL) {
                 ParentalControlsScreen(onBack = { navController.popBackStack() })
             }
 
-            composable(Routes.PROVIDERS) {
+            browsingDestination(Routes.PROVIDERS) {
                 ProvidersScreen(
                     viewModel = sourcesViewModel,
                     onAddSource = { navController.navigate(Routes.ADD_SOURCE) },
@@ -484,19 +559,19 @@ private fun OpenTvApp(isTelevision: Boolean) {
                 )
             }
 
-            composable(Routes.ADDONS) {
+            browsingDestination(Routes.ADDONS) {
                 StremioAddonsScreen(onBack = { navController.popBackStack() })
             }
 
-            composable(Routes.ABOUT) {
+            browsingDestination(Routes.ABOUT) {
                 AboutScreen(onBack = { navController.popBackStack() })
             }
 
-            composable(Routes.EPG_SETTINGS) {
+            browsingDestination(Routes.EPG_SETTINGS) {
                 EpgSettingsScreen(onBack = { navController.popBackStack() })
             }
 
-            composable(Routes.APP_SETTINGS) {
+            browsingDestination(Routes.APP_SETTINGS) {
                 AppSettingsScreen(onBack = { navController.popBackStack() })
             }
 
@@ -508,8 +583,8 @@ private fun OpenTvApp(isTelevision: Boolean) {
                 )
             }
 
-            composable(Routes.SERIES_DETAIL) { entry ->
-                val seriesId = entry.arguments?.getString("seriesId")?.toLongOrNull() ?: return@composable
+            browsingDestination(Routes.SERIES_DETAIL) { entry ->
+                val seriesId = entry.arguments?.getString("seriesId")?.toLongOrNull() ?: return@browsingDestination
                 SeriesDetailScreen(
                     seriesId = seriesId,
                     viewModel = vodViewModel,
@@ -524,8 +599,8 @@ private fun OpenTvApp(isTelevision: Boolean) {
                 )
             }
 
-            composable(Routes.MOVIE_DETAIL) { entry ->
-                val movieId = entry.arguments?.getString("movieId")?.toLongOrNull() ?: return@composable
+            browsingDestination(Routes.MOVIE_DETAIL) { entry ->
+                val movieId = entry.arguments?.getString("movieId")?.toLongOrNull() ?: return@browsingDestination
                 MovieDetailScreen(
                     movieId = movieId,
                     viewModel = vodViewModel,
@@ -550,7 +625,7 @@ private fun OpenTvApp(isTelevision: Boolean) {
                 )
             }
 
-            composable(Routes.PERSON) { entry ->
+            browsingDestination(Routes.PERSON) { entry ->
                 val name = entry.arguments?.getString("name")
                     ?.let { java.net.URLDecoder.decode(it, "UTF-8") }.orEmpty()
                 PersonScreen(
@@ -602,7 +677,7 @@ private fun RecordingSwitchBanner() {
         }
     }
 
-    Box(Modifier.fillMaxSize().padding(20.dp), contentAlignment = Alignment.TopCenter) {
+    Box(Modifier.fillMaxSize().safeDrawingPadding().padding(20.dp), contentAlignment = Alignment.TopCenter) {
         Row(
             Modifier
                 .clip(RoundedCornerShape(14.dp))

@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">รายการ</string>
+    <string name="phone_guide_guide">ผังรายการ</string>
+    <string name="phone_guide_layout">มุมมองทีวีสดบนโทรศัพท์</string>
+    <string name="phone_guide_now">ตอนนี้</string>
+    <string name="phone_guide_previous_day">วันก่อนหน้า</string>
+    <string name="phone_guide_next_day">วันถัดไป</string>
+    <string name="phone_guide_details">รายละเอียด</string>
+</resources>

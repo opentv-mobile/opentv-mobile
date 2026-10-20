@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">Rozmiar wideo</string>
+    <string name="player_display_fit">Dopasuj</string>
+    <string name="player_display_fill">Wypełnij (przytnij)</string>
+    <string name="player_display_stretch">Rozciągnij</string>
+    <string name="player_display_orientation">Orientacja</string>
+    <string name="player_display_landscape">Pozioma</string>
+    <string name="player_display_portrait">Pionowa</string>
+    <string name="player_display_system">Odblokuj (zgodnie z systemem)</string>
+    <string name="player_display_lock">Zablokuj bieżącą orientację</string>
+</resources>

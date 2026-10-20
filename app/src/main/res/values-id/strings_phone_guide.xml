@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">Daftar</string>
+    <string name="phone_guide_guide">Panduan</string>
+    <string name="phone_guide_layout">Tampilan TV langsung di ponsel</string>
+    <string name="phone_guide_now">Sekarang</string>
+    <string name="phone_guide_previous_day">Hari sebelumnya</string>
+    <string name="phone_guide_next_day">Hari berikutnya</string>
+    <string name="phone_guide_details">Detail</string>
+</resources>

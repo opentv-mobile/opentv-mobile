@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">Afspilningslistens URL</string>
+    <string name="local_playlist_file">Lokal fil</string>
+    <string name="local_playlist_choose">Vælg M3U-fil</string>
+    <string name="local_playlist_import">Importér</string>
+    <string name="local_playlist_reimport">Importér igen</string>
+    <string name="local_playlist_importing">Importerer afspilningsliste…</string>
+    <string name="local_playlist_selected">Ny fil valgt</string>
+    <string name="local_playlist_help">Importér en IPTV-liste som .m3u eller .m3u8 (højst 50 MiB). Kun eksterne stream-URL’er understøttes, ikke lokale medier eller HLS-manifester. En privat kopi gemmes; ændringer kræver genimport. Angiv en programguide-URL efter behov.</string>
+    <string name="local_playlist_error">Import mislykkedes. Vælg en gyldig M3U-IPTV-liste, som ikke er tom. Den tidligere liste er uændret.</string>
+    <string name="local_playlist_too_large">Listen overstiger 50 MiB. Den tidligere liste er uændret.</string>
+    <string name="local_playlist_remote_only">Brug en IPTV-kanalliste med absolutte eksterne URL’er, ikke et HLS-manifest eller lokale medier. Den tidligere liste er uændret.</string>
+</resources>

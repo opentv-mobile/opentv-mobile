@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Ostatnie kanały</string>
+    <string name="recent_widget_description">Szybki dostęp do ostatnio oglądanych kanałów</string>
+    <string name="recent_widget_empty">Brak ostatnich kanałów. Dotknij, aby otworzyć OpenTV.</string>
+</resources>

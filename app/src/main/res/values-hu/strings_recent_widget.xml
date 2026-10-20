@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Legutóbbi csatornák</string>
+    <string name="recent_widget_description">Gyors hozzáférés a nemrég nézett csatornákhoz</string>
+    <string name="recent_widget_empty">Nincsenek legutóbbi csatornák. Koppintson az OpenTV megnyitásához.</string>
+</resources>

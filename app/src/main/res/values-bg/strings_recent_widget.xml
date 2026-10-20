@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Последни канали</string>
+    <string name="recent_widget_description">Бърз достъп до наскоро гледани канали</string>
+    <string name="recent_widget_empty">Няма скорошни канали. Докоснете, за да отворите OpenTV.</string>
+</resources>

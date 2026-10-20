@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Πρόσφατα κανάλια</string>
+    <string name="recent_widget_description">Γρήγορη πρόσβαση στα κανάλια που παρακολουθήσατε πρόσφατα</string>
+    <string name="recent_widget_empty">Δεν υπάρχουν πρόσφατα κανάλια. Πατήστε για να ανοίξετε το OpenTV.</string>
+</resources>

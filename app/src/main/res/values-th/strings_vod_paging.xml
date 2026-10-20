@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">หน้าหลัก</string>
+    <string name="vod_paging_see_all">ดูทั้งหมด</string>
+    <string name="vod_paging_loading">กำลังโหลดรายการ…</string>
+    <string name="vod_paging_empty">ไม่มีรายการในตัวเลือกนี้</string>
+    <string name="vod_paging_error">ไม่สามารถโหลดรายการได้</string>
+    <string name="vod_paging_retry">ลองอีกครั้ง</string>
+</resources>

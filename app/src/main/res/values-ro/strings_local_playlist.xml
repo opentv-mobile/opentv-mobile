@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">URL-ul listei</string>
+    <string name="local_playlist_file">Fișier local</string>
+    <string name="local_playlist_choose">Alege fișierul M3U</string>
+    <string name="local_playlist_import">Importă</string>
+    <string name="local_playlist_reimport">Reimportă</string>
+    <string name="local_playlist_importing">Se importă lista…</string>
+    <string name="local_playlist_selected">Fișier nou selectat</string>
+    <string name="local_playlist_help">Importă o listă IPTV .m3u sau .m3u8 (maximum 50 MiB). Sunt acceptate doar URL-uri de fluxuri la distanță, nu fișiere media locale sau manifeste HLS. Se păstrează o copie privată; modificările necesită reimportare. Specifică un URL al ghidului dacă este necesar.</string>
+    <string name="local_playlist_error">Importul a eșuat. Alege o listă IPTV M3U validă și nevidă. Lista anterioară rămâne neschimbată.</string>
+    <string name="local_playlist_too_large">Lista depășește 50 MiB. Lista anterioară rămâne neschimbată.</string>
+    <string name="local_playlist_remote_only">Folosește o listă de canale IPTV cu URL-uri absolute la distanță, nu un manifest HLS sau fișiere locale. Lista anterioară rămâne neschimbată.</string>
+</resources>

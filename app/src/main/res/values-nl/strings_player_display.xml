@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">Videogrootte</string>
+    <string name="player_display_fit">Passend maken</string>
+    <string name="player_display_fill">Vullen (bijsnijden)</string>
+    <string name="player_display_stretch">Uitrekken</string>
+    <string name="player_display_orientation">Schermstand</string>
+    <string name="player_display_landscape">Liggend</string>
+    <string name="player_display_portrait">Staand</string>
+    <string name="player_display_system">Ontgrendelen (systeem volgen)</string>
+    <string name="player_display_lock">Huidige schermstand vergrendelen</string>
+</resources>

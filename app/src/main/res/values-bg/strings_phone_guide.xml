@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">Списък</string>
+    <string name="phone_guide_guide">Програма</string>
+    <string name="phone_guide_layout">Изглед на телевизията на телефона</string>
+    <string name="phone_guide_now">Сега</string>
+    <string name="phone_guide_previous_day">Предишен ден</string>
+    <string name="phone_guide_next_day">Следващ ден</string>
+    <string name="phone_guide_details">Подробности</string>
+</resources>

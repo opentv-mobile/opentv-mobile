@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">Popis</string>
+    <string name="phone_guide_guide">TV vodič</string>
+    <string name="phone_guide_layout">Prikaz televizije uživo na telefonu</string>
+    <string name="phone_guide_now">Sada</string>
+    <string name="phone_guide_previous_day">Prethodni dan</string>
+    <string name="phone_guide_next_day">Sljedeći dan</string>
+    <string name="phone_guide_details">Pojedinosti</string>
+</resources>

@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">Головна</string>
+    <string name="vod_paging_see_all">Показати всі</string>
+    <string name="vod_paging_loading">Завантаження назв…</string>
+    <string name="vod_paging_empty">У цій добірці немає назв.</string>
+    <string name="vod_paging_error">Не вдалося завантажити назви.</string>
+    <string name="vod_paging_retry">Повторити</string>
+</resources>

@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">होम</string>
+    <string name="vod_paging_see_all">सभी देखें</string>
+    <string name="vod_paging_loading">शीर्षक लोड हो रहे हैं…</string>
+    <string name="vod_paging_empty">इस चयन में कोई शीर्षक नहीं है।</string>
+    <string name="vod_paging_error">शीर्षक लोड नहीं हो सके।</string>
+    <string name="vod_paging_retry">फिर कोशिश करें</string>
+</resources>

@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">首页</string>
+    <string name="vod_paging_see_all">查看全部</string>
+    <string name="vod_paging_loading">正在加载影片…</string>
+    <string name="vod_paging_empty">此选择中没有影片。</string>
+    <string name="vod_paging_error">无法加载影片。</string>
+    <string name="vod_paging_retry">重试</string>
+</resources>

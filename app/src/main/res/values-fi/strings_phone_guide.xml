@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">Luettelo</string>
+    <string name="phone_guide_guide">Ohjelmaopas</string>
+    <string name="phone_guide_layout">Puhelimen suoran TV:n näkymä</string>
+    <string name="phone_guide_now">Nyt</string>
+    <string name="phone_guide_previous_day">Edellinen päivä</string>
+    <string name="phone_guide_next_day">Seuraava päivä</string>
+    <string name="phone_guide_details">Tiedot</string>
+</resources>

@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">Koti</string>
+    <string name="vod_paging_see_all">Näytä kaikki</string>
+    <string name="vod_paging_loading">Ladataan nimikkeitä…</string>
+    <string name="vod_paging_empty">Tässä valinnassa ei ole nimikkeitä.</string>
+    <string name="vod_paging_error">Nimikkeiden lataaminen epäonnistui.</string>
+    <string name="vod_paging_retry">Yritä uudelleen</string>
+</resources>

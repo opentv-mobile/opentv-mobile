@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Zobrazit heslo</string>
     <string name="search_recent">Nedávná hledání</string>
     <string name="search_recent_clear">Vymazat</string>
-    <string name="settings_auto_rotate_subtitle">Video se vždy přehrává na šířku. Zapnuto: nabídky a seznamy se také otáčejí s telefonem (podle zámku otáčení v systému).</string>
+    <string name="settings_auto_rotate_subtitle">Zapnuto (výchozí): nabídky a seznamy se řídí nastavením otáčení Androidu. Vypnuto: navigace telefonu zůstává na výšku. Otáčení přehrávače se ovládá samostatně.</string>
     <string name="settings_auto_rotate_title">Otáčet s telefonem</string>
     <string name="settings_edit_provider_title">Upravit poskytovatele</string>
     <string name="upd_available">Je k dispozici aktualizace</string>

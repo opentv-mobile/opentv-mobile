@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -56,9 +57,10 @@ import androidx.compose.ui.unit.dp
 import app.opentv.R
 import app.opentv.data.model.Source
 import app.opentv.ui.ChannelsViewModel
+import app.opentv.ui.isPhoneLandscape
 
 /**
- * Live TV on a phone, in portrait. There's no room for the TV's category rail beside the list, so:
+ * Live TV on a phone. There's no room for the TV's category rail beside the list, so:
  *  - a filter field narrows the current list by name as you type;
  *  - chips switch between Favourites / All / the picked category;
  *  - the full category list (and provider switch) lives in a bottom sheet with its own filter,
@@ -86,16 +88,27 @@ fun PhoneLiveLayout(
     onSelectFavourites: () -> Unit,
     onSelectCategory: (String?) -> Unit,
     onQuery: (String) -> Unit,
-    onPlay: (ChannelsViewModel.Row) -> Unit,
-    onLongPress: (ChannelsViewModel.Row) -> Unit,
-    onToggleFavourite: (ChannelsViewModel.Row) -> Unit,
     emptyContent: @Composable () -> Unit,
+    layout: AppSettings.PhoneLiveLayout,
+    onLayout: (AppSettings.PhoneLiveLayout) -> Unit,
+    listContent: @Composable () -> Unit,
+    guideContent: @Composable () -> Unit,
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     var showSheet by remember { mutableStateOf(false) }
     val categoryLabel = categories.firstOrNull { it.key == selectedCategory }?.label
+    val compact = isPhoneLandscape()
 
     Column(Modifier.fillMaxSize()) {
+      PhoneLiveControls(compact) {
+        Row(Modifier.padding(horizontal = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FilterChip(selected = layout == AppSettings.PhoneLiveLayout.LIST,
+                onClick = { onLayout(AppSettings.PhoneLiveLayout.LIST) },
+                label = { Text(stringResource(R.string.phone_guide_list)) })
+            FilterChip(selected = layout == AppSettings.PhoneLiveLayout.GUIDE,
+                onClick = { onLayout(AppSettings.PhoneLiveLayout.GUIDE) },
+                label = { Text(stringResource(R.string.phone_guide_guide)) })
+        }
         OutlinedTextField(
             value = query,
             onValueChange = { query = it; onQuery(it) },
@@ -121,10 +134,12 @@ fun PhoneLiveLayout(
                 }
             },
             singleLine = true,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp),
+            modifier = Modifier.then(if (compact) Modifier.width(220.dp) else Modifier.fillMaxWidth())
+                .padding(horizontal = 12.dp, vertical = 4.dp),
         )
         Row(
-            Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 12.dp),
+            Modifier.then(if (compact) Modifier else Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()))
+                .padding(horizontal = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             FilterChip(
@@ -181,21 +196,13 @@ fun PhoneLiveLayout(
                 },
             )
         }
+      }
 
         Box(Modifier.weight(1f).fillMaxWidth()) {
             if (rows.isEmpty()) {
                 emptyContent()
-            } else {
-                ChannelList(
-                    rows = rows,
-                    selectedKey = null,
-                    onSelectRow = onPlay,
-                    onFocusRow = {},
-                    onToggleFavourite = onToggleFavourite,
-                    onLongPressRow = onLongPress,
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                )
-            }
+            } else if (layout == AppSettings.PhoneLiveLayout.GUIDE) guideContent()
+            else listContent()
         }
     }
 
@@ -218,6 +225,14 @@ fun PhoneLiveLayout(
             )
         }
     }
+}
+
+@Composable
+private fun PhoneLiveControls(compact: Boolean, content: @Composable () -> Unit) {
+    if (compact) {
+        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+            verticalAlignment = Alignment.CenterVertically) { content() }
+    } else Column { content() }
 }
 
 @Composable

@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">प्लेलिस्ट URL</string>
+    <string name="local_playlist_file">स्थानीय फ़ाइल</string>
+    <string name="local_playlist_choose">M3U फ़ाइल चुनें</string>
+    <string name="local_playlist_import">आयात करें</string>
+    <string name="local_playlist_reimport">फिर से आयात करें</string>
+    <string name="local_playlist_importing">प्लेलिस्ट आयात हो रही है…</string>
+    <string name="local_playlist_selected">नई फ़ाइल चुनी गई</string>
+    <string name="local_playlist_help">.m3u या .m3u8 IPTV सूची आयात करें (अधिकतम 50 MiB)। केवल दूरस्थ स्ट्रीम URL समर्थित हैं, स्थानीय मीडिया या HLS मैनिफ़ेस्ट नहीं। निजी प्रति सहेजी जाती है; बदलावों के लिए फिर से आयात करें। ज़रूरत हो तो गाइड URL दें।</string>
+    <string name="local_playlist_error">आयात नहीं हो सका। मान्य और गैर-खाली M3U IPTV सूची चुनें। पिछली प्लेलिस्ट नहीं बदली है।</string>
+    <string name="local_playlist_too_large">प्लेलिस्ट 50 MiB से बड़ी है। पिछली प्लेलिस्ट नहीं बदली है।</string>
+    <string name="local_playlist_remote_only">पूर्ण दूरस्थ URL वाली IPTV चैनल सूची इस्तेमाल करें, HLS मैनिफ़ेस्ट या स्थानीय मीडिया नहीं। पिछली प्लेलिस्ट नहीं बदली है।</string>
+</resources>

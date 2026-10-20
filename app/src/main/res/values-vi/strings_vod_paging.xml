@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">Trang chủ</string>
+    <string name="vod_paging_see_all">Xem tất cả</string>
+    <string name="vod_paging_loading">Đang tải nội dung…</string>
+    <string name="vod_paging_empty">Không có nội dung trong lựa chọn này.</string>
+    <string name="vod_paging_error">Không thể tải nội dung.</string>
+    <string name="vod_paging_retry">Thử lại</string>
+</resources>

@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Показване на паролата</string>
     <string name="search_recent">Скорошни търсения</string>
     <string name="search_recent_clear">Изчистване</string>
-    <string name="settings_auto_rotate_subtitle">Видеото винаги се гледа хоризонтално. Вкл.: менютата и списъците също се завъртат с телефона (спазвайки заключването на завъртането).</string>
+    <string name="settings_auto_rotate_subtitle">Вкл. (по подразбиране): менютата и списъците следват настройката за завъртане на Android. Изкл.: навигацията на телефона остава портретна. Завъртането на плейъра се управлява отделно.</string>
     <string name="settings_auto_rotate_title">Завъртане с телефона</string>
     <string name="settings_edit_provider_title">Редактиране на доставчика</string>
     <string name="upd_available">Налична е актуализация</string>

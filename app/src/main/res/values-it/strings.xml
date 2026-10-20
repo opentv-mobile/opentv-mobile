@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Mostra password</string>
     <string name="search_recent">Ricerche recenti</string>
     <string name="search_recent_clear">Cancella</string>
-    <string name="settings_auto_rotate_subtitle">Il video è sempre in orizzontale. On: anche menu ed elenchi ruotano con il telefono (rispettando il blocco rotazione di sistema).</string>
+    <string name="settings_auto_rotate_subtitle">Attivo (predefinito): menu ed elenchi seguono la rotazione di Android. Disattivo: la navigazione del telefono resta in verticale. La rotazione del lettore si controlla separatamente.</string>
     <string name="settings_auto_rotate_title">Ruota con il telefono</string>
     <string name="settings_edit_provider_title">Modifica provider</string>
     <string name="upd_available">Aggiornamento disponibile</string>

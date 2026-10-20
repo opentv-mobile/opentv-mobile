@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">اندازهٔ ویدیو</string>
+    <string name="player_display_fit">جا دادن</string>
+    <string name="player_display_fill">پر کردن (برش)</string>
+    <string name="player_display_stretch">کشیدن</string>
+    <string name="player_display_orientation">جهت صفحه</string>
+    <string name="player_display_landscape">افقی</string>
+    <string name="player_display_portrait">عمودی</string>
+    <string name="player_display_system">باز کردن قفل (پیروی از سیستم)</string>
+    <string name="player_display_lock">قفل کردن جهت فعلی</string>
+</resources>

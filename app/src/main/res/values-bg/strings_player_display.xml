@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">Размер на видеото</string>
+    <string name="player_display_fit">Побиране</string>
+    <string name="player_display_fill">Запълване (изрязване)</string>
+    <string name="player_display_stretch">Разтягане</string>
+    <string name="player_display_orientation">Ориентация</string>
+    <string name="player_display_landscape">Пейзажна</string>
+    <string name="player_display_portrait">Портретна</string>
+    <string name="player_display_system">Отключване (според системата)</string>
+    <string name="player_display_lock">Заключване на текущата ориентация</string>
+</resources>

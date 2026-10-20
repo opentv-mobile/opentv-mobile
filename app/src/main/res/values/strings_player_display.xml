@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">Video size</string>
+    <string name="player_display_fit">Fit</string>
+    <string name="player_display_fill">Fill (crop)</string>
+    <string name="player_display_stretch">Stretch</string>
+    <string name="player_display_orientation">Orientation</string>
+    <string name="player_display_landscape">Landscape</string>
+    <string name="player_display_portrait">Portrait</string>
+    <string name="player_display_system">Unlock (follow system)</string>
+    <string name="player_display_lock">Lock current orientation</string>
+</resources>

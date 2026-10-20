@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Saluran terbaru</string>
+    <string name="recent_widget_description">Akses cepat ke saluran yang baru ditonton</string>
+    <string name="recent_widget_empty">Belum ada saluran terbaru. Ketuk untuk membuka OpenTV.</string>
+</resources>

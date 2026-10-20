@@ -17,6 +17,7 @@ import app.opentv.data.model.EpgChannelAlias
 import app.opentv.data.model.EpgFeed
 import app.opentv.data.model.Programme
 import app.opentv.data.model.Source
+import app.opentv.data.local.isLocalPlaylist
 import app.opentv.data.parser.ChannelNameNormalizer
 import app.opentv.data.parser.XmltvParser
 import app.opentv.data.remote.XtreamApi
@@ -135,6 +136,7 @@ class EpgRepository(
      */
     suspend fun ensureFeeds() {
         for (source in sourceDao.enabled()) {
+            if (source.isLocalPlaylist && source.epgUrl.isNullOrBlank()) continue
             if (feedDao.forProvider(source.id) == null) {
                 feedDao.insert(
                     EpgFeed(
@@ -170,6 +172,9 @@ class EpgRepository(
             var downloaded = 0
 
             for (feed in feedDao.enabled()) {
+                // A local file has no provider host from which xmltv.php can be inferred.
+                val provider = feed.providerSourceId?.let { sourceDao.byId(it) }
+                if (provider?.isLocalPlaylist == true && provider.epgUrl.isNullOrBlank()) continue
                 if (!force && nowUtcMillis - feed.lastSyncMillis < REFRESH_INTERVAL_MILLIS) {
                     succeeded++
                     continue
@@ -292,7 +297,18 @@ class EpgRepository(
             feed.providerSourceId != null -> {
                 val source: Source = sourceDao.byId(feed.providerSourceId)
                     ?: throw IllegalStateException("Provider for this guide no longer exists.")
-                api.openEpgStream(source)
+                check(!source.isLocalPlaylist || !source.epgUrl.isNullOrBlank()) { "Local playlist has no guide URL" }
+                if (source.isLocalPlaylist) {
+                    // Never pass a local source to Xtream's xmltv.php fallback, even when the
+                    // explicit URL is malformed. Request.Builder validates it instead.
+                    val response = http.newCall(Request.Builder().url(checkNotNull(source.epgUrl))
+                        .header("User-Agent", source.userAgent).build()).execute()
+                    if (!response.isSuccessful || response.body == null) {
+                        response.close()
+                        throw IllegalStateException("Guide download failed (HTTP ${response.code}).")
+                    }
+                    checkNotNull(response.body).byteStream()
+                } else api.openEpgStream(source)
             }
             feed.url != null -> {
                 val response = http.newCall(Request.Builder().url(feed.url).build()).execute()

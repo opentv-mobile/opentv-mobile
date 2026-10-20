@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">URL zoznamu</string>
+    <string name="local_playlist_file">Miestny súbor</string>
+    <string name="local_playlist_choose">Vybrať súbor M3U</string>
+    <string name="local_playlist_import">Importovať</string>
+    <string name="local_playlist_reimport">Importovať znova</string>
+    <string name="local_playlist_importing">Importovanie zoznamu…</string>
+    <string name="local_playlist_selected">Vybraný nový súbor</string>
+    <string name="local_playlist_help">Importujte zoznam IPTV .m3u alebo .m3u8 (najviac 50 MiB). Podporované sú iba vzdialené adresy streamov, nie miestne médiá ani manifesty HLS. Uloží sa súkromná kópia; zmeny vyžadujú nový import. Podľa potreby zadajte URL programu.</string>
+    <string name="local_playlist_error">Import zlyhal. Vyberte platný, neprázdny zoznam IPTV M3U. Predchádzajúci zoznam zostáva nezmenený.</string>
+    <string name="local_playlist_too_large">Zoznam presahuje 50 MiB. Predchádzajúci zoznam zostáva nezmenený.</string>
+    <string name="local_playlist_remote_only">Použite zoznam kanálov IPTV s absolútnymi vzdialenými URL, nie manifest HLS ani miestne médiá. Predchádzajúci zoznam zostáva nezmenený.</string>
+</resources>

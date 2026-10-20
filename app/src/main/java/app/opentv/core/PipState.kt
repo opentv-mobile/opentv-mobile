@@ -18,10 +18,50 @@ import kotlinx.coroutines.flow.asStateFlow
  */
 object PipState {
     /** True only while the full-screen player is on and eligible to shrink into PiP. */
-    @Volatile var eligible: Boolean = false
+    val eligible: Boolean get() = owner != null
 
     /** Whether playback is currently going — no point PiP-ing a paused/black screen. */
-    @Volatile var isPlaying: Boolean = false
+    var isPlaying: Boolean = false
+        private set
+    var aspectRatio: Float = 16f / 9f
+        private set
+
+    private var owner: Any? = null
+    private var pausePlayback: (() -> Unit)? = null
+    private var activityVisible = false
+    val playbackAllowed: Boolean get() = mayPlayVideo(activityVisible, _inPip.value)
+    fun owns(token: Any): Boolean = owner === token
+
+    /** A departing navigation entry must never clear the next player's registration. Main thread. */
+    fun attach(token: Any, pause: () -> Unit) {
+        pausePlayback?.invoke()
+        owner = token
+        pausePlayback = pause
+        isPlaying = false
+        aspectRatio = 16f / 9f
+    }
+
+    fun update(token: Any, playing: Boolean, ratio: Float) {
+        if (owner !== token) return
+        isPlaying = playing
+        aspectRatio = ratio
+    }
+
+    fun detach(token: Any) {
+        if (owner !== token) return
+        owner = null
+        pausePlayback = null
+        isPlaying = false
+    }
+
+    fun setActivityVisible(visible: Boolean) {
+        activityVisible = visible
+        pauseIfHidden()
+    }
+
+    private fun pauseIfHidden() {
+        if (!playbackAllowed) pausePlayback?.invoke()
+    }
 
     /** Set by the Activity from onPictureInPictureModeChanged; the player hides its chrome on it. */
     private val _inPip = MutableStateFlow(false)
@@ -29,5 +69,6 @@ object PipState {
 
     fun setInPip(value: Boolean) {
         _inPip.value = value
+        pauseIfHidden()
     }
 }

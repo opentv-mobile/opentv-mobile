@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Letzte Sender</string>
+    <string name="recent_widget_description">Schnellzugriff auf zuletzt angesehene Sender</string>
+    <string name="recent_widget_empty">Keine letzten Sender. Tippen, um OpenTV zu öffnen.</string>
+</resources>

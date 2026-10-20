@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">فهرست</string>
+    <string name="phone_guide_guide">راهنمای برنامه‌ها</string>
+    <string name="phone_guide_layout">نمای تلویزیون زنده در تلفن</string>
+    <string name="phone_guide_now">اکنون</string>
+    <string name="phone_guide_previous_day">روز قبل</string>
+    <string name="phone_guide_next_day">روز بعد</string>
+    <string name="phone_guide_details">جزئیات</string>
+</resources>

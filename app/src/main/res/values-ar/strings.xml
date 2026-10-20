@@ -562,7 +562,7 @@
     <string name="recset_pw_show">إظهار كلمة المرور</string>
     <string name="search_recent">عمليات البحث الأخيرة</string>
     <string name="search_recent_clear">مسح</string>
-    <string name="settings_auto_rotate_subtitle">يُعرض الفيديو دائمًا بالوضع الأفقي. تشغيل: القوائم أيضًا تدور مع الهاتف (مع احترام قفل التدوير في النظام).</string>
+    <string name="settings_auto_rotate_subtitle">مفعّل (افتراضيًا): تتبع القوائم إعداد التدوير في Android. معطّل: يبقى التنقل على الهاتف عموديًا. يتم التحكم في تدوير المشغّل بشكل منفصل.</string>
     <string name="settings_auto_rotate_title">التدوير مع الهاتف</string>
     <string name="settings_edit_provider_title">تعديل المزوّد</string>
     <string name="upd_available">يتوفر تحديث</string>

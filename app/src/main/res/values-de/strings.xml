@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Passwort anzeigen</string>
     <string name="search_recent">Letzte Suchen</string>
     <string name="search_recent_clear">Löschen</string>
-    <string name="settings_auto_rotate_subtitle">Videos laufen immer im Querformat. An: Menüs und Listen drehen sich ebenfalls mit dem Handy (die Drehsperre des Systems gilt weiter).</string>
+    <string name="settings_auto_rotate_subtitle">An (Standard): Menüs und Listen folgen der Android-Dreheinstellung. Aus: Handynavigation bleibt im Hochformat. Die Player-Drehung wird separat gesteuert.</string>
     <string name="settings_auto_rotate_title">Mit dem Handy drehen</string>
     <string name="settings_edit_provider_title">Anbieter bearbeiten</string>
     <string name="upd_available">Update verfügbar</string>

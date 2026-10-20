@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Nedávne kanály</string>
+    <string name="recent_widget_description">Rýchly prístup k nedávno sledovaným kanálom</string>
+    <string name="recent_widget_empty">Žiadne nedávne kanály. Klepnutím otvoríte OpenTV.</string>
+</resources>

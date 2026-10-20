@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">Home</string>
+    <string name="vod_paging_see_all">See all</string>
+    <string name="vod_paging_loading">Loading titles…</string>
+    <string name="vod_paging_empty">No titles in this selection.</string>
+    <string name="vod_paging_error">Could not load titles.</string>
+    <string name="vod_paging_retry">Retry</string>
+</resources>

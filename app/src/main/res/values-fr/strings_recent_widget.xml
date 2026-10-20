@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Chaînes récentes</string>
+    <string name="recent_widget_description">Accès rapide aux chaînes regardées récemment</string>
+    <string name="recent_widget_empty">Aucune chaîne récente. Touchez pour ouvrir OpenTV.</string>
+</resources>

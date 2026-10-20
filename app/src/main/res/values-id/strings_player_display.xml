@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">Ukuran video</string>
+    <string name="player_display_fit">Sesuaikan</string>
+    <string name="player_display_fill">Penuhi (pangkas)</string>
+    <string name="player_display_stretch">Regangkan</string>
+    <string name="player_display_orientation">Orientasi</string>
+    <string name="player_display_landscape">Lanskap</string>
+    <string name="player_display_portrait">Potret</string>
+    <string name="player_display_system">Buka kunci (ikuti sistem)</string>
+    <string name="player_display_lock">Kunci orientasi saat ini</string>
+</resources>

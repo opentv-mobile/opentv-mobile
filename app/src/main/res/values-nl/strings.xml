@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Wachtwoord tonen</string>
     <string name="search_recent">Recente zoekopdrachten</string>
     <string name="search_recent_clear">Wissen</string>
-    <string name="settings_auto_rotate_subtitle">Video speelt altijd liggend af. Aan: menu\'s en lijsten draaien ook mee met je telefoon (de rotatievergrendeling van het systeem blijft gelden).</string>
+    <string name="settings_auto_rotate_subtitle">Aan (standaard): menu\'s en lijsten volgen de Android-rotatie-instelling. Uit: telefoonnavigatie blijft staand. De rotatie van de speler wordt apart geregeld.</string>
     <string name="settings_auto_rotate_title">Meedraaien met telefoon</string>
     <string name="settings_edit_provider_title">Provider bewerken</string>
     <string name="upd_available">Update beschikbaar</string>

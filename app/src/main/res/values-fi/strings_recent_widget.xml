@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Viimeisimmät kanavat</string>
+    <string name="recent_widget_description">Nopea pääsy viimeksi katsottuihin kanaviin</string>
+    <string name="recent_widget_empty">Ei viimeisimpiä kanavia. Avaa OpenTV napauttamalla.</string>
+</resources>

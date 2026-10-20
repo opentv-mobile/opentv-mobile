@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">URL popisa</string>
+    <string name="local_playlist_file">Lokalna datoteka</string>
+    <string name="local_playlist_choose">Odaberi M3U datoteku</string>
+    <string name="local_playlist_import">Uvezi</string>
+    <string name="local_playlist_reimport">Ponovno uvezi</string>
+    <string name="local_playlist_importing">Uvoz popisa…</string>
+    <string name="local_playlist_selected">Odabrana nova datoteka</string>
+    <string name="local_playlist_help">Uvezite IPTV popis .m3u ili .m3u8 (najviše 50 MiB). Podržani su samo udaljeni URL-ovi prijenosa, ne lokalni mediji ni HLS manifesti. Sprema se privatna kopija; promjene zahtijevaju ponovni uvoz. Po potrebi unesite URL programskog vodiča.</string>
+    <string name="local_playlist_error">Uvoz nije uspio. Odaberite valjan, neprazan M3U IPTV popis. Prethodni popis ostaje nepromijenjen.</string>
+    <string name="local_playlist_too_large">Popis prelazi 50 MiB. Prethodni popis ostaje nepromijenjen.</string>
+    <string name="local_playlist_remote_only">Upotrijebite IPTV popis kanala s apsolutnim udaljenim URL-ovima, ne HLS manifest ni lokalne medije. Prethodni popis ostaje nepromijenjen.</string>
+</resources>

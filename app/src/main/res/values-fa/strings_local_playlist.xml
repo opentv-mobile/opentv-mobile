@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">نشانی فهرست پخش</string>
+    <string name="local_playlist_file">فایل محلی</string>
+    <string name="local_playlist_choose">انتخاب فایل M3U</string>
+    <string name="local_playlist_import">درون‌ریزی</string>
+    <string name="local_playlist_reimport">درون‌ریزی دوباره</string>
+    <string name="local_playlist_importing">در حال درون‌ریزی فهرست…</string>
+    <string name="local_playlist_selected">فایل جدید انتخاب شد</string>
+    <string name="local_playlist_help">یک فهرست IPTV با پسوند .m3u یا .m3u8 درون‌ریزی کنید (حداکثر 50 MiB). فقط نشانی‌های پخش راه دور پشتیبانی می‌شوند، نه رسانه‌های محلی یا مانیفست‌های HLS. یک نسخهٔ خصوصی ذخیره می‌شود؛ تغییرات نیازمند درون‌ریزی دوباره هستند. در صورت نیاز نشانی راهنمای برنامه را مشخص کنید.</string>
+    <string name="local_playlist_error">درون‌ریزی ممکن نشد. یک فهرست IPTV معتبر و غیرخالی با قالب M3U انتخاب کنید. فهرست قبلی تغییری نکرده است.</string>
+    <string name="local_playlist_too_large">حجم فهرست بیش از 50 MiB است. فهرست قبلی تغییری نکرده است.</string>
+    <string name="local_playlist_remote_only">از فهرست کانال IPTV با نشانی‌های مطلق راه دور استفاده کنید، نه مانیفست HLS یا رسانهٔ محلی. فهرست قبلی تغییری نکرده است.</string>
+</resources>

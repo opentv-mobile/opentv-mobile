@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">Начало</string>
+    <string name="vod_paging_see_all">Виж всички</string>
+    <string name="vod_paging_loading">Зареждане на заглавия…</string>
+    <string name="vod_paging_empty">Няма заглавия в тази селекция.</string>
+    <string name="vod_paging_error">Заглавията не могат да се заредят.</string>
+    <string name="vod_paging_retry">Опитай отново</string>
+</resources>

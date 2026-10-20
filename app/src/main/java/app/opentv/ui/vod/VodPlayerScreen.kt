@@ -12,6 +12,9 @@ import app.opentv.ui.LocalLayoutClass
 import app.opentv.ui.player.PlayerGestureLayer
 import app.opentv.ui.player.ImmersiveSystemBars
 import app.opentv.ui.player.PlayerChromeInsets
+import app.opentv.ui.player.BindPlayerPlayback
+import app.opentv.ui.player.PlayerDisplayControls
+import androidx.compose.material.icons.filled.PictureInPictureAlt
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.WindowInsets
@@ -68,6 +71,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -156,15 +160,19 @@ fun VodPlayerScreen(
     val state by controller.state.collectAsState()
     val tracks by controller.tracks.collectAsState()
 
-    var paused by remember { mutableStateOf(false) }
+    val resizeMode by settings.playerResizeMode.collectAsState()
+    val inPip by app.opentv.core.PipState.inPip.collectAsState()
+    val activity = context.findActivity() as? app.opentv.MainActivity
     var vodPanel by remember { mutableStateOf(VodPanel.NONE) }
     val panelFocus = remember { FocusRequester() }
     var positionMs by remember { mutableLongStateOf(0L) }
+    var sessionPosition by rememberSaveable(mediaKey) { mutableLongStateOf(-1L) }
     var durationMs by remember { mutableLongStateOf(0L) }
     var scrubbing by remember { mutableStateOf(false) }
     var scrubValue by remember { mutableFloatStateOf(0f) }
 
     var controlsVisible by remember { mutableStateOf(true) }
+    var displayMenuOpen by remember { mutableStateOf(false) }
     val touch = LocalLayoutClass.current.isTouch
     var interaction by remember { androidx.compose.runtime.mutableIntStateOf(0) }
     val barFocus = remember { FocusRequester() }
@@ -190,6 +198,14 @@ fun VodPlayerScreen(
         }
     }
 
+    val playback = BindPlayerPlayback(controller.player) {
+        val pos = controller.player.currentPosition
+        val dur = controller.player.duration
+        sessionPosition = pos
+        CoroutineScope(Dispatchers.IO + kotlinx.coroutines.NonCancellable).launch { savePosition(pos, dur) }
+    }
+    val paused = !playback.playWhenReady
+
     // Keep the screen awake during playback — see the note in PlayerScreen; a film is exactly when
     // the screensaver must not fire. Window flag is the reliable path; keepScreenOn is a backstop.
     DisposableEffect(Unit) {
@@ -213,8 +229,9 @@ fun VodPlayerScreen(
     }
 
     LaunchedEffect(mediaKey) {
-        val resumeFrom = graph.playbackPositions.get(settings.activeProfileId.value, mediaKey)
-            ?.takeIf { !it.isFinished }?.positionMillis ?: 0L
+        val resumeFrom = if (sessionPosition >= 0) sessionPosition else
+            graph.playbackPositions.get(settings.activeProfileId.value, mediaKey)
+                ?.takeIf { !it.isFinished }?.positionMillis ?: 0L
         // Downloaded? Play the file — works with no signal, and spares the provider connection.
         val url = graph.downloadRepository.localFile(mediaKey) ?: streamUrl
         controller.play(
@@ -248,6 +265,7 @@ fun VodPlayerScreen(
         while (isActive) {
             if (!scrubbing) {
                 positionMs = controller.player.currentPosition.coerceAtLeast(0)
+                sessionPosition = positionMs
                 // A growing recording has no fixed length; the recorded-so-far extent (how far you
                 // can skip ahead) is what's been read into the buffer.
                 durationMs = if (growingRec) controller.player.bufferedPosition.coerceAtLeast(0)
@@ -260,10 +278,10 @@ fun VodPlayerScreen(
     // Auto-hide when playing and not paused/scrubbing and no picker open. A growing recording dips in
     // and out of Buffering as it rides the write head, so for that case Buffering counts as "playing"
     // here — otherwise a single hiccup would pin the transport bar on screen for the rest of the watch.
-    LaunchedEffect(controlsVisible, interaction, state, paused, scrubbing, vodPanel) {
+    LaunchedEffect(controlsVisible, interaction, state, paused, scrubbing, vodPanel, displayMenuOpen) {
         val activelyPlaying = state is PlayerController.State.Playing ||
             (growingRec && state is PlayerController.State.Buffering)
-        if (controlsVisible && !paused && !scrubbing && vodPanel == VodPanel.NONE && activelyPlaying) {
+        if (controlsVisible && !displayMenuOpen && !paused && !scrubbing && vodPanel == VodPanel.NONE && activelyPlaying) {
             delay(5_000)
             controlsVisible = false
         }
@@ -322,12 +340,13 @@ fun VodPlayerScreen(
                     )
                 }
             },
+            update = { it.resizeMode = resizeMode },
         )
 
         // Touch: swipe right to skip forward, left to skip back (same step as the buttons), plus
         // brightness/volume drags. See PlayerGestureLayer.
         PlayerGestureLayer(
-            enabled = touch,
+            enabled = touch && !inPip,
             dragsEnabled = vodPanel == VodPanel.NONE,
             onTap = { if (controlsVisible) controlsVisible = false else reveal() },
         ) { dir ->
@@ -335,10 +354,10 @@ fun VodPlayerScreen(
             else if (dir > 0) controller.seekForward() else controller.seekBackward()
             reveal()
         }
-        if (touch) ImmersiveSystemBars(hidden = !controlsVisible)
-        if (touch) {
+        if (touch) ImmersiveSystemBars(hidden = !controlsVisible || inPip)
+        if (touch && !inPip) {
             AnimatedVisibility(
-                visible = controlsVisible,
+                visible = controlsVisible && !inPip,
                 enter = fadeIn(),
                 exit = fadeOut(),
                 modifier = Modifier.align(Alignment.TopStart),
@@ -354,7 +373,7 @@ fun VodPlayerScreen(
             }
         }
 
-        when (val current = state) {
+        if (!inPip) when (val current = state) {
             is PlayerController.State.Buffering ->
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -387,8 +406,8 @@ fun VodPlayerScreen(
             else -> Unit
         }
 
-        AnimatedVisibility(
-            visible = controlsVisible,
+        if (!inPip) AnimatedVisibility(
+            visible = controlsVisible && !inPip,
             enter = fadeIn(),
             exit = fadeOut(),
             modifier = Modifier.align(Alignment.BottomCenter),
@@ -459,7 +478,7 @@ fun VodPlayerScreen(
                 Spacer(Modifier.height(10.dp))
 
                 Row(
-                    Modifier.then(if (touch) Modifier.horizontalScroll(rememberScrollState()) else Modifier),
+                    Modifier.horizontalScroll(rememberScrollState()),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     VodChip(Icons.Filled.FastRewind, stringResource(R.string.player_rewind)) {
@@ -471,8 +490,7 @@ fun VodPlayerScreen(
                         label = if (paused) stringResource(R.string.common_play) else stringResource(R.string.player_pause),
                         focusRequester = barFocus,
                     ) {
-                        paused = !paused
-                        controller.player.playWhenReady = !paused
+                        controller.player.playWhenReady = paused
                         interaction++
                     }
                     Spacer(Modifier.width(10.dp))
@@ -488,6 +506,13 @@ fun VodPlayerScreen(
                     VodChip(Icons.Filled.Audiotrack, stringResource(R.string.player_audio)) {
                         vodPanel = if (vodPanel == VodPanel.AUDIO) VodPanel.NONE else VodPanel.AUDIO
                         interaction++
+                    }
+                    PlayerDisplayControls(settings, onMenuVisibilityChanged = { displayMenuOpen = it }) { interaction++ }
+                    if (activity?.pipSupported() == true) {
+                        VodChip(Icons.Filled.PictureInPictureAlt, stringResource(R.string.player_pop_out)) {
+                            activity.enterPipNow()
+                            interaction++
+                        }
                     }
                 }
             }

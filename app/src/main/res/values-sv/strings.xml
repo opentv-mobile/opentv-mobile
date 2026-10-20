@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Visa lösenord</string>
     <string name="search_recent">Senaste sökningar</string>
     <string name="search_recent_clear">Rensa</string>
-    <string name="settings_auto_rotate_subtitle">Video spelas alltid upp i liggande läge. På: menyer och listor roterar också med telefonen (systemets rotationslås gäller).</string>
+    <string name="settings_auto_rotate_subtitle">På (standard): menyer och listor följer Androids rotationsinställning. Av: telefonnavigeringen förblir stående. Spelarens rotation styrs separat.</string>
     <string name="settings_auto_rotate_title">Rotera med telefonen</string>
     <string name="settings_edit_provider_title">Redigera leverantör</string>
     <string name="upd_available">Uppdatering tillgänglig</string>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">Lista</string>
+    <string name="phone_guide_guide">Műsorújság</string>
+    <string name="phone_guide_layout">Élő TV nézete telefonon</string>
+    <string name="phone_guide_now">Most</string>
+    <string name="phone_guide_previous_day">Előző nap</string>
+    <string name="phone_guide_next_day">Következő nap</string>
+    <string name="phone_guide_details">Részletek</string>
+</resources>

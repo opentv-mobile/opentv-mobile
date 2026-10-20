@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">القنوات الأخيرة</string>
+    <string name="recent_widget_description">وصول سريع إلى القنوات التي شاهدتها مؤخرًا</string>
+    <string name="recent_widget_empty">لا توجد قنوات أخيرة. انقر لفتح OpenTV.</string>
+</resources>

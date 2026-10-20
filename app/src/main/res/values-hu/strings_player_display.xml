@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">Videóméret</string>
+    <string name="player_display_fit">Illesztés</string>
+    <string name="player_display_fill">Kitöltés (vágás)</string>
+    <string name="player_display_stretch">Nyújtás</string>
+    <string name="player_display_orientation">Tájolás</string>
+    <string name="player_display_landscape">Fekvő</string>
+    <string name="player_display_portrait">Álló</string>
+    <string name="player_display_system">Feloldás (rendszerkövetés)</string>
+    <string name="player_display_lock">Jelenlegi tájolás rögzítése</string>
+</resources>

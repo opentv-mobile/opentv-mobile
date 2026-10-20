@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">ช่องล่าสุด</string>
+    <string name="recent_widget_description">เข้าถึงช่องที่เพิ่งรับชมได้อย่างรวดเร็ว</string>
+    <string name="recent_widget_empty">ยังไม่มีช่องล่าสุด แตะเพื่อเปิด OpenTV</string>
+</resources>

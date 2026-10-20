@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">Dimensiune video</string>
+    <string name="player_display_fit">Încadrează</string>
+    <string name="player_display_fill">Umple (decupează)</string>
+    <string name="player_display_stretch">Întinde</string>
+    <string name="player_display_orientation">Orientare</string>
+    <string name="player_display_landscape">Peisaj</string>
+    <string name="player_display_portrait">Portret</string>
+    <string name="player_display_system">Deblochează (urmează sistemul)</string>
+    <string name="player_display_lock">Blochează orientarea curentă</string>
+</resources>

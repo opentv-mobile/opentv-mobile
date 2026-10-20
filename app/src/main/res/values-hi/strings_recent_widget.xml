@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">हाल के चैनल</string>
+    <string name="recent_widget_description">हाल ही में देखे गए चैनलों तक तुरंत पहुँचें</string>
+    <string name="recent_widget_empty">कोई हाल का चैनल नहीं है। OpenTV खोलने के लिए टैप करें।</string>
+</resources>

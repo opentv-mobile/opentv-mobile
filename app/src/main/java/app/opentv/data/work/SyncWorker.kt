@@ -18,6 +18,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import app.opentv.core.ServiceLocator
 import app.opentv.data.repo.CatalogRepository
+import app.opentv.data.local.canRefreshCatalogue
 import java.util.concurrent.TimeUnit
 
 /**
@@ -41,6 +42,7 @@ class SyncWorker(
         var anyFailed = false
 
         for (source in sources) {
+            if (!source.canRefreshCatalogue()) continue
             when (val result = graph.catalogRepository.sync(source, now)) {
                 is CatalogRepository.SyncResult.Success ->
                     Log.i(TAG, "Catalogue for ${source.name}: ${result.channelCount} channels")

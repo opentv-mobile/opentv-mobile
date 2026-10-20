@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">Ana sayfa</string>
+    <string name="vod_paging_see_all">Tümünü gör</string>
+    <string name="vod_paging_loading">İçerikler yükleniyor…</string>
+    <string name="vod_paging_empty">Bu seçimde içerik yok.</string>
+    <string name="vod_paging_error">İçerikler yüklenemedi.</string>
+    <string name="vod_paging_retry">Tekrar dene</string>
+</resources>

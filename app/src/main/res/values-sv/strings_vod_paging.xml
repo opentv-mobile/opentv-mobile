@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">Hem</string>
+    <string name="vod_paging_see_all">Visa alla</string>
+    <string name="vod_paging_loading">Läser in titlar…</string>
+    <string name="vod_paging_empty">Inga titlar i det här urvalet.</string>
+    <string name="vod_paging_error">Kunde inte läsa in titlar.</string>
+    <string name="vod_paging_retry">Försök igen</string>
+</resources>

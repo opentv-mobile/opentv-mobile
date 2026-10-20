@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">رابط قائمة التشغيل</string>
+    <string name="local_playlist_file">ملف محلي</string>
+    <string name="local_playlist_choose">اختيار ملف M3U</string>
+    <string name="local_playlist_import">استيراد</string>
+    <string name="local_playlist_reimport">إعادة الاستيراد</string>
+    <string name="local_playlist_importing">جارٍ استيراد القائمة…</string>
+    <string name="local_playlist_selected">تم اختيار ملف جديد</string>
+    <string name="local_playlist_help">استورد قائمة IPTV بصيغة .m3u أو .m3u8 (بحد أقصى 50 MiB). تُدعم روابط البث البعيدة فقط، وليس الوسائط المحلية أو ملفات بيان HLS. تُحفظ نسخة خاصة؛ تتطلب التغييرات إعادة الاستيراد. حدّد رابط دليل البرامج عند الحاجة.</string>
+    <string name="local_playlist_error">تعذّر الاستيراد. اختر قائمة IPTV بصيغة M3U صالحة وغير فارغة. لم تتغير القائمة السابقة.</string>
+    <string name="local_playlist_too_large">تتجاوز القائمة 50 MiB. لم تتغير القائمة السابقة.</string>
+    <string name="local_playlist_remote_only">استخدم قائمة قنوات IPTV بروابط بعيدة مطلقة، وليس ملف بيان HLS أو وسائط محلية. لم تتغير القائمة السابقة.</string>
+</resources>

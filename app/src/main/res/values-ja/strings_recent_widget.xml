@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">最近のチャンネル</string>
+    <string name="recent_widget_description">最近視聴したチャンネルにすばやくアクセス</string>
+    <string name="recent_widget_empty">最近のチャンネルはありません。タップしてOpenTVを開きます。</string>
+</resources>

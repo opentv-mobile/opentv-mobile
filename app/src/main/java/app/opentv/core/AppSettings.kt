@@ -41,6 +41,19 @@ class AppSettings private constructor(context: Context) {
      */
     enum class ChannelLayout { GRID, LIST }
 
+    /** Independent of the TV layout; existing phone installs continue opening the list. */
+    enum class PhoneLiveLayout { LIST, GUIDE }
+    private val _phoneLiveLayout = MutableStateFlow(
+        runCatching { PhoneLiveLayout.valueOf(prefs.getString("phone_live_layout", "LIST")!!) }
+            .getOrDefault(PhoneLiveLayout.LIST),
+    )
+    val phoneLiveLayout: StateFlow<PhoneLiveLayout> = _phoneLiveLayout.asStateFlow()
+
+    fun setPhoneLiveLayout(layout: PhoneLiveLayout) {
+        prefs.edit().putString("phone_live_layout", layout.name).apply()
+        _phoneLiveLayout.value = layout
+    }
+
     private val _channelLayout = MutableStateFlow(readChannelLayout())
     val channelLayout: StateFlow<ChannelLayout> = _channelLayout.asStateFlow()
 
@@ -293,10 +306,11 @@ class AppSettings private constructor(context: Context) {
     }
 
     /**
-     * Phones only: off (default) keeps browsing in portrait and playback in landscape; on lets the
-     * whole app follow the phone's own auto-rotate, for people who browse sideways.
+     * Phone navigation follows Android's rotation lock by default; off keeps browsing in portrait.
+     * Playback has its own session policy. Only the setter persists this key, so an absent key is
+     * the old implicit default, while a stored false is an explicit choice that must be preserved.
      */
-    private val _phoneAutoRotate = MutableStateFlow(prefs.getBoolean(KEY_PHONE_AUTO_ROTATE, false))
+    private val _phoneAutoRotate = MutableStateFlow(prefs.getBoolean(KEY_PHONE_AUTO_ROTATE, true))
     val phoneAutoRotate: StateFlow<Boolean> = _phoneAutoRotate.asStateFlow()
 
     fun setPhoneAutoRotate(enabled: Boolean) {

@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Нещодавні канали</string>
+    <string name="recent_widget_description">Швидкий доступ до нещодавно переглянутих каналів</string>
+    <string name="recent_widget_empty">Немає нещодавніх каналів. Торкніться, щоб відкрити OpenTV.</string>
+</resources>

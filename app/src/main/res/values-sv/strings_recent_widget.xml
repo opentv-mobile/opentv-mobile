@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Senaste kanalerna</string>
+    <string name="recent_widget_description">Snabb åtkomst till nyligen visade kanaler</string>
+    <string name="recent_widget_empty">Inga senaste kanaler. Tryck för att öppna OpenTV.</string>
+</resources>

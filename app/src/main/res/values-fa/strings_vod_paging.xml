@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">خانه</string>
+    <string name="vod_paging_see_all">نمایش همه</string>
+    <string name="vod_paging_loading">در حال بارگذاری عنوان‌ها…</string>
+    <string name="vod_paging_empty">عنوانی در این انتخاب وجود ندارد.</string>
+    <string name="vod_paging_error">بارگذاری عنوان‌ها ممکن نشد.</string>
+    <string name="vod_paging_retry">تلاش دوباره</string>
+</resources>

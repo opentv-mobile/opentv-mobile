@@ -6,6 +6,15 @@
 package app.opentv.ui.onboarding
 
 import android.widget.Toast
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import app.opentv.data.local.isLocalPlaylist
+import app.opentv.data.local.safePlaylistDisplayName
+import app.opentv.data.local.playlistDisplayName
+import androidx.compose.runtime.LaunchedEffect
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,7 +32,10 @@ import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FilterChip
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -42,6 +54,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.opentv.R
 import app.opentv.data.model.Source
@@ -61,6 +74,7 @@ import app.opentv.ui.channels.readClipboardText
  *    are entitled to know it stays on the device, and to be told so without having to go
  *    looking for a privacy policy.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddSourceScreen(
     viewModel: SourcesViewModel,
@@ -106,6 +120,20 @@ fun AddSourceScreen(
     var epgUrl by remember(existing?.id) { mutableStateOf(existing?.epgUrl ?: "") }
     var showAdvanced by remember { mutableStateOf(false) }
     var userAgent by remember(existing?.id) { mutableStateOf(existing?.userAgent ?: Source.DEFAULT_USER_AGENT) }
+    var localMode by remember(existing?.id) { mutableStateOf(existing?.isLocalPlaylist == true) }
+    var selectedFile by remember(existing?.id) { mutableStateOf<Uri?>(null) }
+    var selectedName by remember(existing?.id) { mutableStateOf<String?>(null) }
+    LaunchedEffect(selectedFile) {
+        selectedName = selectedFile?.let { uri ->
+            withContext(Dispatchers.IO) {
+                safePlaylistDisplayName(runCatching { context.contentResolver.playlistDisplayName(uri) }.getOrNull())
+            }
+        }
+    }
+    val filePicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) selectedFile = uri
+    }
+    val isLocal = kind == SourceKind.M3U && localMode
 
     // Editing copies onto the existing row, so id, enabled state, live format and last-sync stamp
     // are preserved; a fresh add starts from a blank Source (id 0, so save() inserts).
@@ -115,7 +143,7 @@ fun AddSourceScreen(
             else context.getString(R.string.onboarding_default_provider_name)
         },
         kind = kind,
-        url = url,
+        url = if (isLocal) "" else url,
         username = username.takeIf { it.isNotBlank() },
         password = password.takeIf { it.isNotBlank() },
         macAddress = mac.takeIf { it.isNotBlank() },
@@ -123,7 +151,7 @@ fun AddSourceScreen(
         userAgent = userAgent.ifBlank { Source.DEFAULT_USER_AGENT },
     )
 
-    val canSubmit = url.isNotBlank() && when (kind) {
+    val canSubmit = if (isLocal) selectedFile != null || existing?.isLocalPlaylist == true else url.isNotBlank() && when (kind) {
         SourceKind.XTREAM -> username.isNotBlank() && password.isNotBlank()
         SourceKind.M3U -> true
         SourceKind.STALKER -> mac.isNotBlank()
@@ -136,7 +164,7 @@ fun AddSourceScreen(
             .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Column(Modifier.widthIn(max = 640.dp)) {
+        Column(Modifier.widthIn(max = 640.dp).fillMaxWidth()) {
             Text(
                 stringResource(
                     if (existing != null) R.string.settings_edit_provider_title
@@ -153,27 +181,31 @@ fun AddSourceScreen(
 
             Spacer(Modifier.height(24.dp))
 
-            // Wraps on a phone: in one fixed row the third option was squeezed to an empty box.
-            @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
-            androidx.compose.foundation.layout.FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                FilterChip(
-                    selected = kind == SourceKind.XTREAM,
-                    onClick = { kind = SourceKind.XTREAM },
-                    label = { Text(stringResource(R.string.onboarding_xtream_login)) },
-                )
-                FilterChip(
-                    selected = kind == SourceKind.M3U,
-                    onClick = { kind = SourceKind.M3U },
-                    label = { Text(stringResource(R.string.onboarding_m3u_url)) },
-                )
-                FilterChip(
-                    selected = kind == SourceKind.STALKER,
-                    onClick = { kind = SourceKind.STALKER },
-                    label = { Text(stringResource(R.string.onboarding_stalker_portal)) },
-                )
+            // Material segments expose selected/radio semantics and 48dp touch targets. Omit the
+            // check icon so all three short labels fit equally on a portrait phone.
+            SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+                val kinds = listOf(SourceKind.XTREAM, SourceKind.M3U, SourceKind.STALKER)
+                kinds.forEachIndexed { index, provider ->
+                    SegmentedButton(
+                        selected = kind == provider,
+                        enabled = existing?.isLocalPlaylist != true && !ui.syncing,
+                        onClick = { kind = provider },
+                        shape = SegmentedButtonDefaults.itemShape(index, kinds.size),
+                        modifier = Modifier.weight(1f),
+                        icon = {},
+                        label = {
+                            Text(
+                                stringResource(when (provider) {
+                                    SourceKind.XTREAM -> R.string.provider_picker_xtream
+                                    SourceKind.M3U -> R.string.provider_picker_m3u
+                                    SourceKind.STALKER -> R.string.provider_picker_stalker
+                                }),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        },
+                    )
+                }
             }
 
             Spacer(Modifier.height(20.dp))
@@ -187,7 +219,25 @@ fun AddSourceScreen(
             )
             Spacer(Modifier.height(12.dp))
 
-            OutlinedTextField(
+            if (kind == SourceKind.M3U) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedButton(onClick = { localMode = false }, enabled = existing?.isLocalPlaylist != true && !ui.syncing) {
+                        Text(stringResource(R.string.local_playlist_url))
+                    }
+                    OutlinedButton(onClick = { localMode = true }, enabled = existing == null && !ui.syncing) {
+                        Text(stringResource(R.string.local_playlist_file))
+                    }
+                }
+                Spacer(Modifier.height(12.dp))
+            }
+            if (isLocal) {
+                Text(stringResource(R.string.local_playlist_help))
+                existing?.localPlaylistDisplayName?.let { Text(safePlaylistDisplayName(it)) }
+                if (selectedFile != null) Text(selectedName ?: stringResource(R.string.local_playlist_selected))
+                OutlinedButton(onClick = { filePicker.launch(arrayOf("*/*")) }, enabled = !ui.syncing) {
+                    Text(stringResource(if (existing == null) R.string.local_playlist_choose else R.string.local_playlist_reimport))
+                }
+            } else OutlinedTextField(
                 value = url,
                 onValueChange = { url = it },
                 label = {
@@ -307,7 +357,7 @@ fun AddSourceScreen(
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedButton(
                     onClick = { viewModel.test(draft()) },
-                    enabled = canSubmit && !ui.testing && !ui.syncing,
+                    enabled = !isLocal && canSubmit && !ui.testing && !ui.syncing,
                 ) {
                     if (ui.testing) {
                         CircularProgressIndicator(Modifier.height(18.dp), strokeWidth = 2.dp)
@@ -316,10 +366,19 @@ fun AddSourceScreen(
                     }
                 }
                 Button(
-                    onClick = { viewModel.saveAndSync(draft()) { ok -> if (ok) onFinished() } },
+                    onClick = {
+                        val uri = selectedFile
+                        if (isLocal && uri != null) viewModel.importLocal(draft(), uri) { ok -> if (ok) onFinished() }
+                        else viewModel.saveAndSync(draft()) { ok -> if (ok) onFinished() }
+                    },
                     enabled = canSubmit && !ui.testing && !ui.syncing,
                 ) {
-                    Text(if (ui.syncing) stringResource(R.string.onboarding_working) else stringResource(R.string.onboarding_save_load))
+                    Text(stringResource(when {
+                        ui.syncing -> R.string.onboarding_working
+                        isLocal && selectedFile != null -> if (existing == null) R.string.local_playlist_import else R.string.local_playlist_reimport
+                        isLocal -> R.string.common_save
+                        else -> R.string.onboarding_save_load
+                    }))
                 }
             }
 

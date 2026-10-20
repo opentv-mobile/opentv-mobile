@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">Afspeellijst-URL</string>
+    <string name="local_playlist_file">Lokaal bestand</string>
+    <string name="local_playlist_choose">M3U-bestand kiezen</string>
+    <string name="local_playlist_import">Importeren</string>
+    <string name="local_playlist_reimport">Opnieuw importeren</string>
+    <string name="local_playlist_importing">Afspeellijst importeren…</string>
+    <string name="local_playlist_selected">Nieuw bestand geselecteerd</string>
+    <string name="local_playlist_help">Importeer een IPTV-lijst als .m3u of .m3u8 (maximaal 50 MiB). Alleen externe stream-URL’s worden ondersteund, geen lokale media of HLS-manifesten. Er wordt een privékopie bewaard; wijzigingen vereisen opnieuw importeren. Geef zo nodig een gids-URL op.</string>
+    <string name="local_playlist_error">Importeren mislukt. Kies een geldige, niet-lege M3U-IPTV-lijst. De vorige afspeellijst blijft ongewijzigd.</string>
+    <string name="local_playlist_too_large">De afspeellijst is groter dan 50 MiB. De vorige afspeellijst blijft ongewijzigd.</string>
+    <string name="local_playlist_remote_only">Gebruik een IPTV-zenderlijst met absolute externe URL’s, geen HLS-manifest of lokale media. De vorige afspeellijst blijft ongewijzigd.</string>
+</resources>

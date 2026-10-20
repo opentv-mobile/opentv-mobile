@@ -161,6 +161,16 @@ fun AppSettingsScreen(onBack: () -> Unit) {
         Spacer(Modifier.height(16.dp))
 
         SettingsSection(stringResource(R.string.settings_section_guide)) {
+            if (LocalLayoutClass.current == LayoutClass.PHONE) {
+                val phoneLayout by settings.phoneLiveLayout.collectAsState()
+                Text(stringResource(R.string.phone_guide_layout), style = MaterialTheme.typography.titleMedium)
+                ThemeOption(stringResource(R.string.phone_guide_list), phoneLayout == AppSettings.PhoneLiveLayout.LIST) {
+                    settings.setPhoneLiveLayout(AppSettings.PhoneLiveLayout.LIST)
+                }
+                ThemeOption(stringResource(R.string.phone_guide_guide), phoneLayout == AppSettings.PhoneLiveLayout.GUIDE) {
+                    settings.setPhoneLiveLayout(AppSettings.PhoneLiveLayout.GUIDE)
+                }
+            } else {
             Text(
                 stringResource(R.string.settings_channel_layout_title),
                 style = MaterialTheme.typography.titleMedium,
@@ -186,6 +196,7 @@ fun AppSettingsScreen(onBack: () -> Unit) {
                 checked = previewSound,
                 onToggle = settings::setGuidePreviewSound,
             )
+            }
             if (LocalLayoutClass.current == LayoutClass.PHONE) {
                 val autoRotate by settings.phoneAutoRotate.collectAsState()
                 ToggleRow(

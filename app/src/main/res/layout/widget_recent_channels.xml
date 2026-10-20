@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:padding="8dp"
+    android:background="@drawable/widget_recent_background">
+    <TextView android:id="@+id/widget_title"
+        android:layout_width="match_parent" android:layout_height="36dp"
+        android:gravity="center_vertical" android:paddingStart="8dp" android:paddingEnd="8dp"
+        android:text="@string/recent_widget_title" android:textColor="#FFFFFF"
+        android:textSize="16sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end" />
+    <TextView android:id="@+id/widget_empty"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:gravity="center" android:padding="12dp" android:textColor="#E3E3E8"
+        android:textSize="14sp" android:text="@string/recent_widget_empty" />
+    <LinearLayout android:id="@+id/widget_channels"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" />
+</LinearLayout>

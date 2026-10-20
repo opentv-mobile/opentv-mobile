@@ -15,15 +15,14 @@ android {
         applicationId = "app.opentvmobile"
         minSdk = 23
         targetSdk = 35
-        versionCode = 100
-        versionName = "1.0.0"
+        versionCode = 101
+        versionName = "1.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
         create("upload") {
-            // Populated from environment variables in CI. Absent locally, which is why the
-            // release build type falls back to the debug key below.
+            // Populated from environment variables in CI; the release workflow requires them.
             val storePath = providers.environmentVariable("KEYSTORE_PATH").orNull
             if (storePath != null) {
                 storeFile = file(storePath)
@@ -43,18 +42,8 @@ android {
                 "proguard-rules.pro",
             )
 
-            /*
-             * Falls back to the debug key when no keystore is configured.
-             *
-             * An *unsigned* APK cannot be installed on Android at all — it is rejected before
-             * the user sees anything, with an error that explains nothing. For an early
-             * project that means every tester is blocked on the maintainer setting up signing
-             * infrastructure first.
-             *
-             * The trade-off is real and is written up in docs/RELEASING.md: moving to a
-             * proper keystore later changes the signature, and Android will refuse to upgrade
-             * over a debug-signed install. Set up real signing before announcing publicly.
-             */
+            // Local-only fallback for testing release optimizations, not for distribution.
+            // CI must supply the existing production key; see docs/RELEASING.md.
             signingConfig =
                 if (providers.environmentVariable("KEYSTORE_PATH").orNull != null) {
                     signingConfigs.getByName("upload")
@@ -95,6 +84,7 @@ android {
             isReturnDefaultValues = true
         }
     }
+    sourceSets.getByName("test").resources.srcDir("schemas")
 }
 
 ksp {
@@ -131,6 +121,9 @@ dependencies {
 
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
+    implementation(libs.room.paging)
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
     ksp(libs.room.compiler)
 
     implementation(libs.okhttp)
@@ -155,4 +148,5 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.room.testing)
     testImplementation(libs.androidx.test.ext.junit)
+    testImplementation("androidx.compose.ui:ui-test-junit4")
 }

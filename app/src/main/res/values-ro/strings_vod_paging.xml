@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">Acasă</string>
+    <string name="vod_paging_see_all">Vezi toate</string>
+    <string name="vod_paging_loading">Se încarcă titlurile…</string>
+    <string name="vod_paging_empty">Nu există titluri în această selecție.</string>
+    <string name="vod_paging_error">Titlurile nu au putut fi încărcate.</string>
+    <string name="vod_paging_retry">Reîncearcă</string>
+</resources>

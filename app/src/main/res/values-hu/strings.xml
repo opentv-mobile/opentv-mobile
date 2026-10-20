@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Jelszó megjelenítése</string>
     <string name="search_recent">Legutóbbi keresések</string>
     <string name="search_recent_clear">Törlés</string>
-    <string name="settings_auto_rotate_subtitle">A videó mindig fekvőben megy. Be: a menük és listák is forognak a telefonnal (a rendszer forgatászárát figyelembe véve).</string>
+    <string name="settings_auto_rotate_subtitle">Be (alapértelmezett): a menük és listák követik az Android forgatási beállítását. Ki: a telefon navigációja álló marad. A lejátszó forgatása külön vezérelhető.</string>
     <string name="settings_auto_rotate_title">Forgatás a telefonnal</string>
     <string name="settings_edit_provider_title">Szolgáltató szerkesztése</string>
     <string name="upd_available">Frissítés érhető el</string>

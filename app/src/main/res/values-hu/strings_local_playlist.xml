@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">Lejátszási lista URL-je</string>
+    <string name="local_playlist_file">Helyi fájl</string>
+    <string name="local_playlist_choose">M3U-fájl kiválasztása</string>
+    <string name="local_playlist_import">Importálás</string>
+    <string name="local_playlist_reimport">Újraimportálás</string>
+    <string name="local_playlist_importing">Lista importálása…</string>
+    <string name="local_playlist_selected">Új fájl kiválasztva</string>
+    <string name="local_playlist_help">IPTV-lista importálása .m3u vagy .m3u8 formátumban (legfeljebb 50 MiB). Csak távoli adatfolyam-URL-ek támogatottak, helyi média és HLS-manifeszt nem. Privát másolat készül; a módosításokhoz újraimportálás szükséges. Szükség esetén adjon meg műsorújság-URL-t.</string>
+    <string name="local_playlist_error">Az importálás sikertelen. Válasszon érvényes, nem üres M3U IPTV-listát. A korábbi lista változatlan marad.</string>
+    <string name="local_playlist_too_large">A lista meghaladja az 50 MiB-ot. A korábbi lista változatlan marad.</string>
+    <string name="local_playlist_remote_only">Abszolút távoli URL-eket tartalmazó IPTV-csatornalistát használjon, ne HLS-manifesztet vagy helyi médiát. A korábbi lista változatlan marad.</string>
+</resources>

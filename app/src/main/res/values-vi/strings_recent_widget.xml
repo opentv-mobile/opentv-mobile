@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Kênh gần đây</string>
+    <string name="recent_widget_description">Truy cập nhanh các kênh đã xem gần đây</string>
+    <string name="recent_widget_empty">Chưa có kênh gần đây. Nhấn để mở OpenTV.</string>
+</resources>

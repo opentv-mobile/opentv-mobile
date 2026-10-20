@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Recente zenders</string>
+    <string name="recent_widget_description">Snelle toegang tot onlangs bekeken zenders</string>
+    <string name="recent_widget_empty">Geen recente zenders. Tik om OpenTV te openen.</string>
+</resources>

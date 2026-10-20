@@ -34,6 +34,7 @@ import app.opentv.data.model.SeriesRule
 import app.opentv.data.model.Source
 import app.opentv.data.model.SourceKind
 import app.opentv.data.model.StreamKind
+import app.opentv.data.parser.MovieBrowseKey
 
 class Converters {
     @TypeConverter fun sourceKindToString(value: SourceKind): String = value.name
@@ -77,7 +78,7 @@ class Converters {
         SeriesFts::class,
         Download::class,
     ],
-    version = 13,
+    version = 15,
     exportSchema = true,
 )
 @TypeConverters(Converters::class)
@@ -103,7 +104,7 @@ abstract class OpenTvDatabase : RoomDatabase() {
          * v2 → v3: profiles. Adds the profiles table with a default profile (id 1, "Me"), and
          * re-keys resume positions by (profileId, mediaKey) — existing positions all become the
          * default profile's, so nobody loses their place. Written to match Room's own DDL so the
-         * identity check passes; the destructive fallback below is only a backstop.
+         * identity check passes. Only historical v1 has a destructive fallback.
          */
         private val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(db: SupportSQLiteDatabase) {
@@ -311,6 +312,53 @@ abstract class OpenTvDatabase : RoomDatabase() {
             }
         }
 
+        internal val MIGRATION_13_14 = object : Migration(13, 14) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `sources` ADD COLUMN `localPlaylistFileName` TEXT")
+                db.execSQL("ALTER TABLE `sources` ADD COLUMN `localPlaylistDisplayName` TEXT")
+            }
+        }
+
+        internal val MIGRATION_14_15 = object : Migration(14, 15) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `movies` ADD COLUMN `browseGroupKey` TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE `movies` ADD COLUMN `browseQualityRank` INTEGER NOT NULL DEFAULT 0")
+                // Keyset batches bound memory on large catalogues. No OFFSET, window functions or
+                // SQL normalization: use exactly the Kotlin grouping rules, even on API 23 SQLite.
+                var afterId: Long? = null
+                val update = db.compileStatement(
+                    "UPDATE movies SET browseGroupKey = ?, browseQualityRank = ? WHERE id = ?",
+                )
+                try {
+                    while (true) {
+                        val batch = mutableListOf<Pair<Long, MovieBrowseKey>>()
+                        val sql = if (afterId == null) "SELECT id, name, year FROM movies ORDER BY id LIMIT 500"
+                        else "SELECT id, name, year FROM movies WHERE id > ? ORDER BY id LIMIT 500"
+                        val args = afterId?.let { arrayOf<Any>(it) } ?: emptyArray()
+                        db.query(sql, args).use { cursor ->
+                            while (cursor.moveToNext()) {
+                                batch += cursor.getLong(0) to MovieBrowseKey.from(
+                                    cursor.getString(1), if (cursor.isNull(2)) null else cursor.getInt(2),
+                                )
+                            }
+                        }
+                        if (batch.isEmpty()) break
+                        for ((id, key) in batch) {
+                            update.bindString(1, key.groupKey)
+                            update.bindLong(2, key.qualityRank.toLong())
+                            update.bindLong(3, id)
+                            update.executeUpdateDelete()
+                        }
+                        afterId = batch.last().first
+                    }
+                } finally {
+                    update.close()
+                }
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_browseGroupKey_browseQualityRank_name_id` ON `movies` (`browseGroupKey`, `browseQualityRank`, `name`, `id`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_movies_categoryId_browseGroupKey` ON `movies` (`categoryId`, `browseGroupKey`)")
+            }
+        }
+
         fun build(context: Context): OpenTvDatabase =
             Room.databaseBuilder(context, OpenTvDatabase::class.java, "opentv.db")
                 // WAL keeps guide writes from blocking guide reads, so a background EPG
@@ -319,15 +367,10 @@ abstract class OpenTvDatabase : RoomDatabase() {
                 .addMigrations(
                     MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7,
                     MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13,
+                    MIGRATION_13_14, MIGRATION_14_15,
                 )
-                /*
-                 * Pre-1.0 policy: schema changes drop and rebuild the database. Everything
-                 * in it is re-derivable from the provider (one sync away) except favourites
-                 * and overrides, which is a real but small loss for testers. The policy
-                 * flips to real migrations at the first tagged release — from then on,
-                 * every schema change ships a Migration and this line is deleted.
-                 */
-                .fallbackToDestructiveMigration()
+                // v1 predates the retained migration chain; all versions >= 2 must migrate.
+                .fallbackToDestructiveMigrationFrom(1)
                 .build()
     }
 }

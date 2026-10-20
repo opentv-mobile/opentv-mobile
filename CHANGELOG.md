@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.1.0
+
+- **Local M3U playlists** — import and re-import IPTV files through the document picker, keep a
+  validated private copy, and optionally use a remote XMLTV guide.
+- **Playback controls** — Fit / Fill / Stretch for live TV and VOD, movie/episode Picture-in-Picture,
+  and per-session landscape, portrait, system or locked orientation. Playback starts in landscape;
+  phone browsing defaults to portrait, with optional navigation rotation.
+- **Phone programme guide** — switch between list and touch timeline, browse days and programme
+  actions, with local-time labels and daylight-saving-aware positioning.
+- **Large VOD libraries** — paged movie/series grids, provider-scoped categories, movie quality and
+  provider variant selection, retry/empty states and scroll restoration when returning from details.
+- **Recent channels widget** — open recent logical channels from the home screen, with parental
+  filtering and support for cold/warm launches and resizing.
+- **Adaptive phone navigation** — compact landscape side navigation and scrollable browsing controls;
+  safe insets keep actions clear of system bars and cutouts. Improved provider selector accessibility.
+- **Translations** — new controls and messages localized across all supported app locales.
+
 ## 1.0.0 — first release of OpenTV Mobile
 
 OpenTV Mobile is a phone-first derivative of [OpenTV](https://github.com/opentvproject/opentv)

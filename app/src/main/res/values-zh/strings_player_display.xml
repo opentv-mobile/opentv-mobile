@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">视频尺寸</string>
+    <string name="player_display_fit">适应屏幕</string>
+    <string name="player_display_fill">填满屏幕（裁剪）</string>
+    <string name="player_display_stretch">拉伸</string>
+    <string name="player_display_orientation">屏幕方向</string>
+    <string name="player_display_landscape">横屏</string>
+    <string name="player_display_portrait">竖屏</string>
+    <string name="player_display_system">解锁（跟随系统）</string>
+    <string name="player_display_lock">锁定当前方向</string>
+</resources>

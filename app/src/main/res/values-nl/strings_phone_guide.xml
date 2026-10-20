@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">Lijst</string>
+    <string name="phone_guide_guide">Gids</string>
+    <string name="phone_guide_layout">Live-tv-weergave op telefoon</string>
+    <string name="phone_guide_now">Nu</string>
+    <string name="phone_guide_previous_day">Vorige dag</string>
+    <string name="phone_guide_next_day">Volgende dag</string>
+    <string name="phone_guide_details">Details</string>
+</resources>

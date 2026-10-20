@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">Video boyutu</string>
+    <string name="player_display_fit">Sığdır</string>
+    <string name="player_display_fill">Doldur (kırp)</string>
+    <string name="player_display_stretch">Uzat</string>
+    <string name="player_display_orientation">Ekran yönü</string>
+    <string name="player_display_landscape">Yatay</string>
+    <string name="player_display_portrait">Dikey</string>
+    <string name="player_display_system">Kilidi aç (sistemi izle)</string>
+    <string name="player_display_lock">Geçerli yönü kilitle</string>
+</resources>

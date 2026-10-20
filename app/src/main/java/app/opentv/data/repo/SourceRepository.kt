@@ -10,6 +10,9 @@ import app.opentv.core.AppText
 import app.opentv.data.db.SourceDao
 import app.opentv.data.model.Source
 import app.opentv.data.model.SourceKind
+import app.opentv.data.local.isLocalPlaylist
+import app.opentv.data.db.OpenTvDatabase
+import androidx.room.withTransaction
 import app.opentv.data.remote.StalkerApi
 import app.opentv.data.remote.XtreamApi
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +23,7 @@ class SourceRepository(
     private val dao: SourceDao,
     private val api: XtreamApi,
     private val stalkerApi: StalkerApi,
+    private val database: OpenTvDatabase? = null,
 ) {
     fun observeAll(): Flow<List<Source>> = dao.observeAll()
 
@@ -28,8 +32,20 @@ class SourceRepository(
     suspend fun byId(id: Long): Source? = dao.byId(id)
 
     suspend fun save(source: Source): Long = withContext(Dispatchers.IO) {
+        database?.withTransaction { saveRows(source) } ?: saveRows(source)
+    }
+
+    private suspend fun saveRows(source: Source): Long {
+        // Only the explicit import path may publish/change a private snapshot.
+        val previous = if (source.id != 0L) dao.byId(source.id) else null
+        if (previous?.isLocalPlaylist == true || source.isLocalPlaylist) {
+            val local = checkNotNull(previous)
+            require(local.isLocalPlaylist)
+            dao.update(local.copy(name = source.name, epgUrl = source.epgUrl, userAgent = source.userAgent))
+            return source.id
+        }
         val normalised = source.copy(url = normaliseUrl(source.url, source.kind))
-        if (source.id == 0L) dao.insert(normalised)
+        return if (source.id == 0L) dao.insert(normalised)
         else {
             dao.update(normalised)
             source.id

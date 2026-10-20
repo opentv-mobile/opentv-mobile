@@ -1,29 +1,37 @@
 # OpenTV Mobile roadmap
 
-What might come after 1.0. Nothing here is promised — it's a list of directions, roughly in order
+Implemented work for 1.1.0 and possible next directions. Future items are not promised, roughly in order
 of how often they come up. Suggestions and pull requests are welcome; open an issue first for
 anything large.
 
-## Fixes
+## 1.1.0 release preparation
 
-- **Provider type picker hides "Stalker portal" in portrait** — the three type buttons on the Add
-  provider screen don't fit one row on a phone, and users miss the third one (it only shows once
-  the phone is turned). Replace them with a full-width three-way selector with short labels:
-  Xtream / M3U / Stalker.
+The items below are implemented on `feature/roadmap-1.1`. The user approved general manual testing
+and explicitly requested the 1.1.0 release. This is not evidence that every exhaustive device,
+locale or edge case passed. Commit, push, tag and CI publication are still pending.
+The acceptance order and device cases remain in
+[`MANUAL_TEST_ROADMAP.md`](MANUAL_TEST_ROADMAP.md).
 
-## Next
+## Included in 1.1.0
 
-- **Local M3U files** — pick a `.m3u`/`.m3u8` from the phone instead of typing a URL. The file is
-  copied into the app and can be re-imported when you have a newer one (a local file can't
-  refresh itself the way a URL does).
+- **Phone provider selector** — full-width Xtream / M3U / Stalker segments, including portrait,
+  large-font and RTL handling.
+- **Local M3U files** — document picker, validated private snapshot, atomic re-import and explicit
+  remote XMLTV support. Catalogue refresh skips local snapshots until the user re-imports one.
 - **Movie and series playback controls** ([#1](https://github.com/opentv-mobile/opentv-mobile/issues/1))
-  — bring live TV's Fit / Fill / Stretch options and Picture-in-Picture to on-demand playback,
-  and add portrait / landscape, automatic rotation, and orientation locking. Arbitrary rotation
-  of the video image is outside the planned scope.
-- **Programme guide on the phone** — a touch-friendly grid (swipe through time) alongside the
-  now/next list.
-- **Paging for huge film/series libraries** — load "All" shelves and grids incrementally.
-- **Home-screen widget** — your Recent channels one tap from the launcher.
+  — shared Fit / Fill / Stretch preference, Picture-in-Picture and per-session landscape,
+  portrait, system and locked orientation. Arbitrary rotation of the video image is out of scope.
+- **Programme guide on the phone** — list/guide switch, touch time grid, local-day navigation,
+  UTC-duration geometry across DST and programme actions.
+- **Paging for huge film/series libraries** — Room/Paging grids for categories and “All”, with
+  provider-scoped category identities, movie quality/provider variant selection, empty/error states
+  and per-filter scroll restoration.
+- **Home-screen widget** — up to six recent logical channels, cold/warm launch handoff,
+  parental filtering and launcher resize handling.
+- **Adaptive phone chrome** — compact landscape side navigation, scrollable browsing controls and
+  safe insets for system bars/cutouts; player sessions default to landscape and phone browsing to
+  portrait unless navigation rotation is enabled.
+- **Localization** — new controls and messages translated across all supported app locales.
 
 ## Later
 

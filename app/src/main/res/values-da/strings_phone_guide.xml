@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">Liste</string>
+    <string name="phone_guide_guide">Programguide</string>
+    <string name="phone_guide_layout">Live-tv-visning på telefon</string>
+    <string name="phone_guide_now">Nu</string>
+    <string name="phone_guide_previous_day">Forrige dag</string>
+    <string name="phone_guide_next_day">Næste dag</string>
+    <string name="phone_guide_details">Detaljer</string>
+</resources>

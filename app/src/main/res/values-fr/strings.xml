@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Afficher le mot de passe</string>
     <string name="search_recent">Recherches récentes</string>
     <string name="search_recent_clear">Effacer</string>
-    <string name="settings_auto_rotate_subtitle">La vidéo est toujours en paysage. Activé : menus et listes pivotent aussi avec le téléphone (en respectant le verrouillage de rotation).</string>
+    <string name="settings_auto_rotate_subtitle">Activé (par défaut) : les menus et listes suivent le réglage de rotation Android. Désactivé : la navigation du téléphone reste en portrait. La rotation du lecteur se règle séparément.</string>
     <string name="settings_auto_rotate_title">Pivoter avec le téléphone</string>
     <string name="settings_edit_provider_title">Modifier le fournisseur</string>
     <string name="upd_available">Mise à jour disponible</string>

@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Показати пароль</string>
     <string name="search_recent">Нещодавні пошуки</string>
     <string name="search_recent_clear">Очистити</string>
-    <string name="settings_auto_rotate_subtitle">Відео завжди відтворюється в альбомному режимі. Увімк.: меню та списки теж повертаються з телефоном (з урахуванням блокування повороту).</string>
+    <string name="settings_auto_rotate_subtitle">Увімк. (типово): меню та списки дотримуються налаштування повороту Android. Вимк.: навігація телефона залишається портретною. Поворот програвача налаштовується окремо.</string>
     <string name="settings_auto_rotate_title">Повертати разом із телефоном</string>
     <string name="settings_edit_provider_title">Редагувати провайдера</string>
     <string name="upd_available">Доступне оновлення</string>

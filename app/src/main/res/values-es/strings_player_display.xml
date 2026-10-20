@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">Tamaño del vídeo</string>
+    <string name="player_display_fit">Ajustar</string>
+    <string name="player_display_fill">Rellenar (recortar)</string>
+    <string name="player_display_stretch">Estirar</string>
+    <string name="player_display_orientation">Orientación</string>
+    <string name="player_display_landscape">Horizontal</string>
+    <string name="player_display_portrait">Vertical</string>
+    <string name="player_display_system">Desbloquear (seguir al sistema)</string>
+    <string name="player_display_lock">Bloquear orientación actual</string>
+</resources>

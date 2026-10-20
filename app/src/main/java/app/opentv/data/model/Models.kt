@@ -24,7 +24,7 @@ enum class SourceKind {
     /** Xtream Codes / "player API" panel: username + password + host. */
     XTREAM,
 
-    /** A plain M3U/M3U8 playlist URL, optionally with a separate XMLTV EPG URL. */
+    /** An M3U/M3U8 URL or private local playlist, optionally with a separate XMLTV EPG URL. */
     M3U,
 
     /**
@@ -77,6 +77,11 @@ data class Source(
     val liveFormat: LiveStreamFormat = LiveStreamFormat.HLS,
     val enabled: Boolean = true,
     val lastCatalogSyncMillis: Long = 0,
+    /** Generated relative filename in private storage, never a URI/path supplied by the user.
+     * Local playlists remain M3U sources and have an empty [url]. */
+    val localPlaylistFileName: String? = null,
+    /** Original document name for display only; never used to resolve the private file. */
+    val localPlaylistDisplayName: String? = null,
 ) {
     companion object {
         const val DEFAULT_USER_AGENT: String = "OpenTV/0.1 (Android)"
@@ -264,6 +269,8 @@ data class Programme(
         // "Recently added" and the derived feeds read newest-first; without this every such read
         // sorted the entire library.
         Index(value = ["addedMillis"]),
+        Index(value = ["browseGroupKey", "browseQualityRank", "name", "id"]),
+        Index(value = ["categoryId", "browseGroupKey"]),
     ],
 )
 data class Movie(
@@ -296,6 +303,9 @@ data class Movie(
     val tmdbId: String? = null,
     /** Director(s), provider-formatted. Movies only. */
     val director: String? = null,
+    /** Derived by MovieDao on every upsert; identical to the in-memory browse grouping key. */
+    @ColumnInfo(defaultValue = "''") val browseGroupKey: String = "",
+    @ColumnInfo(defaultValue = "0") val browseQualityRank: Int = 0,
 )
 
 @Entity(

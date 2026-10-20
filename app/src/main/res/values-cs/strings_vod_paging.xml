@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">Domů</string>
+    <string name="vod_paging_see_all">Zobrazit vše</string>
+    <string name="vod_paging_loading">Načítání titulů…</string>
+    <string name="vod_paging_empty">V tomto výběru nejsou žádné tituly.</string>
+    <string name="vod_paging_error">Tituly se nepodařilo načíst.</string>
+    <string name="vod_paging_retry">Zkusit znovu</string>
+</resources>

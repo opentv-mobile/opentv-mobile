@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Canale recente</string>
+    <string name="recent_widget_description">Acces rapid la canalele vizionate recent</string>
+    <string name="recent_widget_empty">Nu există canale recente. Atingeți pentru a deschide OpenTV.</string>
+</resources>

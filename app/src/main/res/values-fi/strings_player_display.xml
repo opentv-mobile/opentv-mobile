@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">Videon koko</string>
+    <string name="player_display_fit">Sovita</string>
+    <string name="player_display_fill">Täytä (rajaa)</string>
+    <string name="player_display_stretch">Venytä</string>
+    <string name="player_display_orientation">Suunta</string>
+    <string name="player_display_landscape">Vaaka</string>
+    <string name="player_display_portrait">Pysty</string>
+    <string name="player_display_system">Avaa lukitus (seuraa järjestelmää)</string>
+    <string name="player_display_lock">Lukitse nykyinen suunta</string>
+</resources>

@@ -562,7 +562,7 @@
     <string name="recset_pw_show">显示密码</string>
     <string name="search_recent">最近搜索</string>
     <string name="search_recent_clear">清除</string>
-    <string name="settings_auto_rotate_subtitle">视频始终横屏播放。开启：菜单和列表也会跟随手机旋转（遵循系统的旋转锁定）。</string>
+    <string name="settings_auto_rotate_subtitle">开启（默认）：菜单和列表遵循 Android 的旋转设置。关闭：手机导航保持竖屏。播放器的旋转单独控制。</string>
     <string name="settings_auto_rotate_title">跟随手机旋转</string>
     <string name="settings_edit_provider_title">编辑服务商</string>
     <string name="upd_available">有可用更新</string>

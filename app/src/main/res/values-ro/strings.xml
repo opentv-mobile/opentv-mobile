@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Afișează parola</string>
     <string name="search_recent">Căutări recente</string>
     <string name="search_recent_clear">Șterge</string>
-    <string name="settings_auto_rotate_subtitle">Videoclipul rulează mereu în peisaj. Activat: meniurile și listele se rotesc și ele cu telefonul (respectând blocarea rotirii).</string>
+    <string name="settings_auto_rotate_subtitle">Activat (implicit): meniurile și listele urmează setarea de rotire Android. Dezactivat: navigarea pe telefon rămâne în portret. Rotirea playerului este controlată separat.</string>
     <string name="settings_auto_rotate_title">Rotește odată cu telefonul</string>
     <string name="settings_edit_provider_title">Editează furnizorul</string>
     <string name="upd_available">Actualizare disponibilă</string>

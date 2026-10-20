@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">Главная</string>
+    <string name="vod_paging_see_all">Показать все</string>
+    <string name="vod_paging_loading">Загрузка названий…</string>
+    <string name="vod_paging_empty">В этой подборке нет названий.</string>
+    <string name="vod_paging_error">Не удалось загрузить названия.</string>
+    <string name="vod_paging_retry">Повторить</string>
+</resources>

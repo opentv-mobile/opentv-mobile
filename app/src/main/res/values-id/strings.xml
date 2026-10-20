@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Tampilkan kata sandi</string>
     <string name="search_recent">Pencarian terbaru</string>
     <string name="search_recent_clear">Hapus</string>
-    <string name="settings_auto_rotate_subtitle">Video selalu diputar dalam mode lanskap. Aktif: menu dan daftar juga ikut berputar (mengikuti kunci rotasi sistem).</string>
+    <string name="settings_auto_rotate_subtitle">Aktif (default): menu dan daftar mengikuti pengaturan rotasi Android. Nonaktif: navigasi ponsel tetap dalam mode potret. Rotasi pemutar dikontrol secara terpisah.</string>
     <string name="settings_auto_rotate_title">Putar mengikuti ponsel</string>
     <string name="settings_edit_provider_title">Edit penyedia</string>
     <string name="upd_available">Pembaruan tersedia</string>

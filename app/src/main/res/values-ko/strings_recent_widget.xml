@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">최근 채널</string>
+    <string name="recent_widget_description">최근 시청한 채널에 빠르게 접근</string>
+    <string name="recent_widget_empty">최근 채널이 없습니다. 탭하여 OpenTV를 여세요.</string>
+</resources>

@@ -28,8 +28,18 @@ import app.opentv.data.model.Series
 import app.opentv.data.model.Source
 import app.opentv.data.model.SourceKind
 import app.opentv.data.model.StreamKind
+import app.opentv.data.local.LocalPlaylistStore
+import app.opentv.data.local.canRefreshCatalogue
+import app.opentv.data.local.isLocalPlaylist
+import app.opentv.data.db.OpenTvDatabase
+import androidx.room.withTransaction
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+import java.io.InputStream
 import app.opentv.data.parser.ChannelNameNormalizer
 import app.opentv.data.parser.M3uParser
+import app.opentv.data.parser.MovieBrowseKey
 import app.opentv.data.parser.VodTitleCleaner
 import app.opentv.data.remote.StalkerApi
 import app.opentv.data.remote.TmdbClient
@@ -82,13 +92,10 @@ data class MovieVariantGroup(
     val hasMultipleQualities: Boolean get() = variants.size > 1
 }
 
-/** A standalone 4-digit release year (19xx/20xx) as it appears inside a VOD title. */
-private val VOD_YEAR = Regex("""\b(19|20)\d{2}\b""")
-
 /**
  * Collapses obvious quality variants of the same film — "The Godfather 1972 HD" and
  * "The Godfather 4K" — into one entry with switchable tiers, the VOD analogue of a channel's
- * quality group. Pure and in-memory: movies carry no stored groupKey, so the key is computed here
+ * quality group. Uses the same pure helper as the persisted browse keys. The key is computed here
  * from the normalised, year-stripped name plus the year (the field, else the one embedded in the
  * name). Group order follows first appearance; variants within a group are best-quality first.
  *
@@ -99,12 +106,8 @@ private val VOD_YEAR = Regex("""\b(19|20)\d{2}\b""")
 internal fun collapseMovieVariants(movies: List<Movie>): List<MovieVariantGroup> {
     val groups = LinkedHashMap<String, MutableList<MovieVariant>>()
     for (movie in movies) {
-        val embeddedYear = VOD_YEAR.find(movie.name)?.value?.toIntOrNull()
-        val bareName = VOD_YEAR.replace(movie.name, " ")
-        val normalized = ChannelNameNormalizer.normalize(bareName)
-        val year = movie.year ?: embeddedYear
-        val key = normalized.groupKey + "|" + (year?.toString() ?: "")
-        groups.getOrPut(key) { mutableListOf() }
+        val normalized = MovieBrowseKey.from(movie.name, movie.year)
+        groups.getOrPut(normalized.groupKey) { mutableListOf() }
             .add(MovieVariant(movie, normalized.qualityLabel, normalized.qualityRank))
     }
     return groups.values.map { variants ->
@@ -134,6 +137,8 @@ class CatalogRepository(
     private val stalkerApi: StalkerApi,
     private val http: OkHttpClient,
     private val settings: AppSettings,
+    private val database: OpenTvDatabase? = null,
+    private val localPlaylists: LocalPlaylistStore? = null,
 ) {
 
     /** TMDB back-fill for VOD detail pages, gated on a user-supplied key. See [TmdbClient]. */
@@ -651,6 +656,7 @@ class CatalogRepository(
      * 40,000-title VOD list.
      */
     suspend fun sync(source: Source, nowUtcMillis: Long): SyncResult = withContext(BackgroundWork.dispatcher) {
+        if (!source.canRefreshCatalogue()) return@withContext SyncResult.Success(0, 0, 0)
         // Skip fetching a content type the user has switched off — that's the whole speed-up.
         // Live is gated here (not in syncLive) so onboarding's direct syncLive still loads channels.
         // Already-synced rows are left untouched: turning a type back on and refreshing restores it.
@@ -666,6 +672,7 @@ class CatalogRepository(
 
     /** Live channels only — the fast path so the guide can show before VOD and the guide load. */
     suspend fun syncLive(source: Source, nowUtcMillis: Long): SyncResult = withContext(Dispatchers.IO) {
+        if (!source.canRefreshCatalogue()) return@withContext SyncResult.Success(0, 0, 0)
         try {
             when (source.kind) {
                 SourceKind.XTREAM -> syncXtreamLive(source, nowUtcMillis)
@@ -956,12 +963,79 @@ class CatalogRepository(
     }
 
     suspend fun deleteSource(sourceId: Long) = withContext(Dispatchers.IO) {
+        val db = database
+        if (db != null) {
+            withContext(NonCancellable) {
+                var localFile: String? = null
+                db.withTransaction {
+                    localFile = sourceDao.byId(sourceId)?.localPlaylistFileName
+                    deleteSourceRows(sourceId)
+                }
+                localPlaylists?.delete(localFile)
+            }
+        } else deleteSourceRows(sourceId)
+    }
+
+    private suspend fun deleteSourceRows(sourceId: Long) {
         channelDao.deleteForSource(sourceId)
         categoryDao.deleteForSource(sourceId)
         movieDao.deleteForSource(sourceId)
         seriesDao.deleteForSource(sourceId)
         episodeDao.deleteForSource(sourceId)
         sourceDao.delete(sourceId)
+    }
+
+    /** Parse first; publish source and catalogue together. No existing file is ever overwritten. */
+    suspend fun importLocalPlaylist(
+        draft: Source,
+        displayName: String?,
+        open: () -> InputStream,
+    ): Int = withContext(Dispatchers.IO) {
+        val store = checkNotNull(localPlaylists)
+        val db = checkNotNull(database)
+        val caller = currentCoroutineContext()
+        val prepared = store.prepare(displayName, open) { caller.ensureActive() }
+        var committed = false
+        try {
+            // Avoid a cancelled dispatcher handoff after commit deleting the newly-published file.
+            // Cancellation observed before the transaction's commit point rolls back all rows.
+            withContext(NonCancellable) {
+                var oldFile: String? = null
+                db.withTransaction {
+                    caller.ensureActive()
+                    val previous = if (draft.id != 0L) checkNotNull(sourceDao.byId(draft.id)) else null
+                    require(previous == null || previous.isLocalPlaylist) { "Not a local playlist" }
+                    oldFile = previous?.localPlaylistFileName
+                    val source = draft.copy(
+                        kind = SourceKind.M3U, url = "", username = null, password = null, macAddress = null,
+                        enabled = previous?.enabled ?: draft.enabled,
+                        localPlaylistFileName = prepared.fileName,
+                        localPlaylistDisplayName = prepared.displayName,
+                        // Strictly increasing for rapid imports and backwards wall clocks: stale
+                        // rows are removed by comparing their stamp to this one.
+                        lastCatalogSyncMillis = maxOf(System.currentTimeMillis(), (previous?.lastCatalogSyncMillis ?: 0) + 1),
+                    )
+                    val id = if (previous == null) sourceDao.insert(source) else {
+                        sourceDao.update(source)
+                        source.id
+                    }
+                    val channels = prepared.parsed.channels.map { it.copy(sourceId = id) }
+                    val categories = channels.mapNotNull { it.categoryId }.distinct().sorted().mapIndexed { index, name ->
+                        Category(id = name, sourceId = id, name = name, kind = StreamKind.LIVE, sortIndex = index)
+                    }
+                    categoryDao.deleteForSource(id)
+                    categoryDao.upsertAll(categories)
+                    channelDao.replaceCatalogue(id, normalized(channels, categories.associate { it.id to it.name }), source.lastCatalogSyncMillis,
+                        matchUniqueUrls = true)
+                    caller.ensureActive()
+                }
+                committed = true
+                store.delete(oldFile)
+            }
+            prepared.parsed.channels.size
+        } finally {
+            if (!committed) store.delete(prepared.fileName)
+        }
     }
 
     companion object {

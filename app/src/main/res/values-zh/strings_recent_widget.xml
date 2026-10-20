@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">最近频道</string>
+    <string name="recent_widget_description">快速访问最近观看的频道</string>
+    <string name="recent_widget_empty">暂无最近频道。点按打开OpenTV。</string>
+</resources>

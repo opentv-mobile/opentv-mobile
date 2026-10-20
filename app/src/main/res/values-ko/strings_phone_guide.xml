@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">목록</string>
+    <string name="phone_guide_guide">편성표</string>
+    <string name="phone_guide_layout">휴대전화 실시간 TV 화면</string>
+    <string name="phone_guide_now">현재</string>
+    <string name="phone_guide_previous_day">이전 날</string>
+    <string name="phone_guide_next_day">다음 날</string>
+    <string name="phone_guide_details">상세 정보</string>
+</resources>

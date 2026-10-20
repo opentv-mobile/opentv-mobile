@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">Kezdőlap</string>
+    <string name="vod_paging_see_all">Összes megtekintése</string>
+    <string name="vod_paging_loading">Címek betöltése…</string>
+    <string name="vod_paging_empty">Nincsenek címek ebben a válogatásban.</string>
+    <string name="vod_paging_error">Nem sikerült betölteni a címeket.</string>
+    <string name="vod_paging_retry">Újra</string>
+</resources>

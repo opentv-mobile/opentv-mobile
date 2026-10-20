@@ -4,11 +4,26 @@ There is no QA department; there is you, your provider and your telly. This page
 count. The app logs everything it does, so a bug report with a log attached is usually a fix
 within the day — and a "works for me" without one is usually nothing.
 
-## The quick loop (with a Mac/PC on the same network)
+## The quick loop from macOS
 
 ```bash
-bash test-run.sh        # reinstalls, launches, records to testrun.log, shows a checklist
+./gradlew testDebugUnitTest
+./gradlew assembleDebug
+~/Library/Android/sdk/platform-tools/adb install -r app/build/outputs/apk/debug/app-debug.apk
+~/Library/Android/sdk/platform-tools/adb shell monkey -p app.opentvmobile.debug 1
 ```
+
+There is no `test-run.sh` in this repository. `testDebugUnitTest` runs the debug variant's unit
+tests, while `assembleDebug` writes the APK to `app/build/outputs/apk/debug/app-debug.apk`. To
+compile the debug variant and run its lint checks, use:
+
+```bash
+./gradlew lintDebug
+```
+
+These commands do not replace testing on a device. To validate the work on
+`feature/roadmap-1.1`, follow the Spanish
+[1.1 manual test plan](MANUAL_TEST_ROADMAP.md), starting with its smoke cases.
 
 ## What to test after any change
 

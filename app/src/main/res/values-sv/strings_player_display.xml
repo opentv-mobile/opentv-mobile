@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">Videostorlek</string>
+    <string name="player_display_fit">Anpassa</string>
+    <string name="player_display_fill">Fyll (beskär)</string>
+    <string name="player_display_stretch">Sträck ut</string>
+    <string name="player_display_orientation">Orientering</string>
+    <string name="player_display_landscape">Liggande</string>
+    <string name="player_display_portrait">Stående</string>
+    <string name="player_display_system">Lås upp (följ systemet)</string>
+    <string name="player_display_lock">Lås aktuell orientering</string>
+</resources>

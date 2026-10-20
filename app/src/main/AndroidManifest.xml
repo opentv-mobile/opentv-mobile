@@ -76,6 +76,7 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="fullUser"
             android:theme="@style/Theme.OpenTV">
 
@@ -96,6 +97,18 @@
             android:name="androidx.media3.session.MediaSessionService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
+
+        <!-- System widget broadcasts only; no launcher activity/duplicate app icon. -->
+        <receiver
+            android:name=".widget.RecentChannelsWidget"
+            android:label="@string/recent_widget_title"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/recent_channels_widget" />
+        </receiver>
 
         <!--
           Keeps a recording running when the user leaves the player or the screen sleeps.

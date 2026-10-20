@@ -574,5 +574,5 @@
     <string name="upd_failed_body">No se ha podido descargar la actualización. Comprueba la conexión e inténtalo de nuevo.</string>
     <string name="upd_available_body">%1$s %2$s ya está disponible. Tienes la %3$s.</string>
     <string name="settings_auto_rotate_title">Girar con el móvil</string>
-    <string name="settings_auto_rotate_subtitle">El vídeo siempre se ve en horizontal. Activado: menús y listas también giran con el móvil (respetando el bloqueo de rotación del sistema).</string>
+    <string name="settings_auto_rotate_subtitle">Activado (predeterminado): menús y listas siguen el ajuste de rotación de Android. Desactivado: navegación del móvil en vertical. El giro del reproductor se controla por separado.</string>
 </resources>

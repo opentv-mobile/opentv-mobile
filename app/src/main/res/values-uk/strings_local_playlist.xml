@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">URL списку відтворення</string>
+    <string name="local_playlist_file">Локальний файл</string>
+    <string name="local_playlist_choose">Вибрати файл M3U</string>
+    <string name="local_playlist_import">Імпортувати</string>
+    <string name="local_playlist_reimport">Імпортувати знову</string>
+    <string name="local_playlist_importing">Імпортування списку…</string>
+    <string name="local_playlist_selected">Вибрано новий файл</string>
+    <string name="local_playlist_help">Імпортуйте IPTV-список .m3u або .m3u8 (до 50 МіБ). Підтримуються лише віддалені URL потоків, не локальні медіафайли й не маніфести HLS. Зберігається приватна копія; зміни потребують повторного імпорту. За потреби вкажіть URL телепрограми.</string>
+    <string name="local_playlist_error">Не вдалося імпортувати. Виберіть коректний непорожній IPTV-список M3U. Попередній список не змінено.</string>
+    <string name="local_playlist_too_large">Список перевищує 50 МіБ. Попередній список не змінено.</string>
+    <string name="local_playlist_remote_only">Використовуйте список IPTV-каналів з абсолютними віддаленими URL, а не маніфест HLS чи локальні медіафайли. Попередній список не змінено.</string>
+</resources>

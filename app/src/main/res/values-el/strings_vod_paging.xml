@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">Αρχική</string>
+    <string name="vod_paging_see_all">Προβολή όλων</string>
+    <string name="vod_paging_loading">Φόρτωση τίτλων…</string>
+    <string name="vod_paging_empty">Δεν υπάρχουν τίτλοι σε αυτή την επιλογή.</string>
+    <string name="vod_paging_error">Δεν ήταν δυνατή η φόρτωση των τίτλων.</string>
+    <string name="vod_paging_retry">Δοκιμή ξανά</string>
+</resources>

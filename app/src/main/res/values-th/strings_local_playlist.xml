@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">URL เพลย์ลิสต์</string>
+    <string name="local_playlist_file">ไฟล์ในเครื่อง</string>
+    <string name="local_playlist_choose">เลือกไฟล์ M3U</string>
+    <string name="local_playlist_import">นำเข้า</string>
+    <string name="local_playlist_reimport">นำเข้าอีกครั้ง</string>
+    <string name="local_playlist_importing">กำลังนำเข้าเพลย์ลิสต์…</string>
+    <string name="local_playlist_selected">เลือกไฟล์ใหม่แล้ว</string>
+    <string name="local_playlist_help">นำเข้ารายการ IPTV .m3u หรือ .m3u8 (สูงสุด 50 MiB) รองรับเฉพาะ URL สตรีมระยะไกล ไม่รองรับสื่อในเครื่องหรือไฟล์แมนิเฟสต์ HLS ระบบจะเก็บสำเนาส่วนตัวไว้ การเปลี่ยนแปลงต้องนำเข้าใหม่ ระบุ URL ผังรายการหากต้องการ</string>
+    <string name="local_playlist_error">นำเข้าไม่ได้ โปรดเลือกรายการ IPTV M3U ที่ถูกต้องและไม่ว่าง เพลย์ลิสต์เดิมไม่เปลี่ยนแปลง</string>
+    <string name="local_playlist_too_large">เพลย์ลิสต์มีขนาดเกิน 50 MiB เพลย์ลิสต์เดิมไม่เปลี่ยนแปลง</string>
+    <string name="local_playlist_remote_only">ใช้รายการช่อง IPTV ที่มี URL ระยะไกลแบบเต็ม ไม่ใช่ไฟล์แมนิเฟสต์ HLS หรือสื่อในเครื่อง เพลย์ลิสต์เดิมไม่เปลี่ยนแปลง</string>
+</resources>

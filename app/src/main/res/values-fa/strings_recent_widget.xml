@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">کانال‌های اخیر</string>
+    <string name="recent_widget_description">دسترسی سریع به کانال‌هایی که اخیراً تماشا کرده‌اید</string>
+    <string name="recent_widget_empty">کانال اخیری وجود ندارد. برای باز کردن OpenTV ضربه بزنید.</string>
+</resources>

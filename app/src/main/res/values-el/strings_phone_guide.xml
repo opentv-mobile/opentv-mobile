@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">Λίστα</string>
+    <string name="phone_guide_guide">Οδηγός</string>
+    <string name="phone_guide_layout">Προβολή ζωντανής TV στο τηλέφωνο</string>
+    <string name="phone_guide_now">Τώρα</string>
+    <string name="phone_guide_previous_day">Προηγούμενη ημέρα</string>
+    <string name="phone_guide_next_day">Επόμενη ημέρα</string>
+    <string name="phone_guide_details">Λεπτομέρειες</string>
+</resources>

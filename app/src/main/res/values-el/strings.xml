@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Εμφάνιση κωδικού</string>
     <string name="search_recent">Πρόσφατες αναζητήσεις</string>
     <string name="search_recent_clear">Απαλοιφή</string>
-    <string name="settings_auto_rotate_subtitle">Το βίντεο παίζει πάντα σε οριζόντιο. Ενεργό: μενού και λίστες περιστρέφονται κι αυτά με το κινητό (τηρώντας το κλείδωμα περιστροφής).</string>
+    <string name="settings_auto_rotate_subtitle">Ενεργό (προεπιλογή): μενού και λίστες ακολουθούν τη ρύθμιση περιστροφής του Android. Ανενεργό: η πλοήγηση στο τηλέφωνο παραμένει κατακόρυφη. Η περιστροφή του προγράμματος αναπαραγωγής ελέγχεται ξεχωριστά.</string>
     <string name="settings_auto_rotate_title">Περιστροφή με το κινητό</string>
     <string name="settings_edit_provider_title">Επεξεργασία παρόχου</string>
     <string name="upd_available">Διαθέσιμη ενημέρωση</string>

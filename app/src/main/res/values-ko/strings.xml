@@ -562,7 +562,7 @@
     <string name="recset_pw_show">비밀번호 표시</string>
     <string name="search_recent">최근 검색어</string>
     <string name="search_recent_clear">지우기</string>
-    <string name="settings_auto_rotate_subtitle">동영상은 항상 가로로 재생됩니다. 켜기: 메뉴와 목록도 휴대폰에 따라 회전합니다(시스템 회전 잠금을 따름).</string>
+    <string name="settings_auto_rotate_subtitle">켜기(기본값): 메뉴와 목록이 Android 회전 설정을 따릅니다. 끄기: 휴대폰 탐색 화면을 세로로 유지합니다. 플레이어 회전은 별도로 제어합니다.</string>
     <string name="settings_auto_rotate_title">휴대폰 방향에 따라 회전</string>
     <string name="settings_edit_provider_title">제공업체 수정</string>
     <string name="upd_available">업데이트 가능</string>

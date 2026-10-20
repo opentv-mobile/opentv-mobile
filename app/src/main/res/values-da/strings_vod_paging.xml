@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">Hjem</string>
+    <string name="vod_paging_see_all">Se alle</string>
+    <string name="vod_paging_loading">Indlæser titler…</string>
+    <string name="vod_paging_empty">Ingen titler i dette udvalg.</string>
+    <string name="vod_paging_error">Titlerne kunne ikke indlæses.</string>
+    <string name="vod_paging_retry">Prøv igen</string>
+</resources>

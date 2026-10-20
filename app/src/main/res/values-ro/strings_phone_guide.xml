@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">Listă</string>
+    <string name="phone_guide_guide">Ghid</string>
+    <string name="phone_guide_layout">Afișarea TV în direct pe telefon</string>
+    <string name="phone_guide_now">Acum</string>
+    <string name="phone_guide_previous_day">Ziua precedentă</string>
+    <string name="phone_guide_next_day">Ziua următoare</string>
+    <string name="phone_guide_details">Detalii</string>
+</resources>

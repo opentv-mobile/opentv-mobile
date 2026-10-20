@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Hiện mật khẩu</string>
     <string name="search_recent">Tìm kiếm gần đây</string>
     <string name="search_recent_clear">Xóa</string>
-    <string name="settings_auto_rotate_subtitle">Video luôn phát ở chế độ ngang. Bật: menu và danh sách cũng xoay theo điện thoại (tuân theo khóa xoay của hệ thống).</string>
+    <string name="settings_auto_rotate_subtitle">Bật (mặc định): menu và danh sách tuân theo cài đặt xoay của Android. Tắt: điều hướng điện thoại giữ ở chế độ dọc. Xoay trình phát được điều khiển riêng.</string>
     <string name="settings_auto_rotate_title">Xoay theo điện thoại</string>
     <string name="settings_edit_provider_title">Sửa nhà cung cấp</string>
     <string name="upd_available">Có bản cập nhật</string>

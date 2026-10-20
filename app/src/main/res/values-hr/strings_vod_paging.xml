@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">Početna</string>
+    <string name="vod_paging_see_all">Prikaži sve</string>
+    <string name="vod_paging_loading">Učitavanje naslova…</string>
+    <string name="vod_paging_empty">Nema naslova u ovom odabiru.</string>
+    <string name="vod_paging_error">Naslovi se nisu mogli učitati.</string>
+    <string name="vod_paging_retry">Pokušaj ponovno</string>
+</resources>

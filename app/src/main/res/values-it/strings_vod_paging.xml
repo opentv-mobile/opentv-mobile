@@ -1,0 +1,8 @@
+<resources>
+    <string name="vod_paging_home">Home</string>
+    <string name="vod_paging_see_all">Mostra tutti</string>
+    <string name="vod_paging_loading">Caricamento dei titoli…</string>
+    <string name="vod_paging_empty">Nessun titolo in questa selezione.</string>
+    <string name="vod_paging_error">Impossibile caricare i titoli.</string>
+    <string name="vod_paging_retry">Riprova</string>
+</resources>

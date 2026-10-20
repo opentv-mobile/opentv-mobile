@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">वीडियो का आकार</string>
+    <string name="player_display_fit">फ़िट करें</string>
+    <string name="player_display_fill">भरें (काटें)</string>
+    <string name="player_display_stretch">खींचें</string>
+    <string name="player_display_orientation">स्क्रीन की दिशा</string>
+    <string name="player_display_landscape">लैंडस्केप</string>
+    <string name="player_display_portrait">पोर्ट्रेट</string>
+    <string name="player_display_system">अनलॉक करें (सिस्टम के अनुसार)</string>
+    <string name="player_display_lock">मौजूदा दिशा लॉक करें</string>
+</resources>

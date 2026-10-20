@@ -48,7 +48,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AspectRatio
 import androidx.compose.material.icons.filled.Audiotrack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.FastForward
@@ -98,7 +97,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.C
 import androidx.media3.common.Tracks
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import app.opentv.R
 import app.opentv.core.ServiceLocator
@@ -154,6 +152,7 @@ fun PlayerScreen(
     }
     val state by controller.state.collectAsState()
     val tracks by controller.tracks.collectAsState()
+    val playback = BindPlayerPlayback(controller.player)
     // What's recording right now, so the Record button can show as armed for this channel.
     val activeRecordings by graph.recordingRepository.observeActive().collectAsState(initial = emptyList())
 
@@ -179,10 +178,11 @@ fun PlayerScreen(
     var previousId by remember { mutableStateOf<Long?>(null) }
     // Digits typed on the remote accumulate here, then jump to that channel number after a beat.
     var numberEntry by remember { mutableStateOf("") }
-    var paused by remember { mutableStateOf(false) }
-    var resizeMode by remember { mutableIntStateOf(settings.playerResizeMode.value) }
+    val paused = !playback.playWhenReady
+    val resizeMode by settings.playerResizeMode.collectAsState()
 
     var controlsVisible by remember { mutableStateOf(true) }
+    var displayMenuOpen by remember { mutableStateOf(false) }
     var panel by remember { mutableStateOf(Panel.NONE) }
     var channelListVisible by remember { mutableStateOf(false) }
     var interaction by remember { mutableIntStateOf(0) }
@@ -199,14 +199,6 @@ fun PlayerScreen(
                 android.content.pm.PackageManager.FEATURE_PICTURE_IN_PICTURE,
             )
     }
-    DisposableEffect(Unit) {
-        app.opentv.core.PipState.eligible = true
-        onDispose {
-            app.opentv.core.PipState.eligible = false
-            app.opentv.core.PipState.isPlaying = false
-        }
-    }
-    LaunchedEffect(paused) { app.opentv.core.PipState.isPlaying = !paused }
     val barFocus = remember { FocusRequester() }
     val panelFocus = remember { FocusRequester() }
     val rootFocus = remember { FocusRequester() }
@@ -226,7 +218,6 @@ fun PlayerScreen(
 
     fun tuneTo(channel: Channel) {
         currentId = channel.id
-        paused = false
         settings.lastChannelId = channel.id
         settings.addRecentChannel(channel.id)
         scope.launch {
@@ -309,8 +300,8 @@ fun PlayerScreen(
     }
 
     // Auto-hide the bar after a few seconds — but never while paused or with a picker open.
-    LaunchedEffect(controlsVisible, interaction, state, paused, panel) {
-        if (controlsVisible && !paused && panel == Panel.NONE &&
+    LaunchedEffect(controlsVisible, interaction, state, paused, panel, displayMenuOpen) {
+        if (controlsVisible && !displayMenuOpen && !paused && panel == Panel.NONE &&
             state is PlayerController.State.Playing
         ) {
             delay(CONTROLS_TIMEOUT_MILLIS)
@@ -462,7 +453,7 @@ fun PlayerScreen(
             }
         }
 
-        when (val current = state) {
+        if (!inPip) when (val current = state) {
             is PlayerController.State.Buffering -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -507,7 +498,7 @@ fun PlayerScreen(
             else -> ""
         }
 
-        if (touch) {
+        if (touch && !inPip) {
             AnimatedVisibility(
                 visible = controlsVisible && !inPip,
                 enter = fadeIn(),
@@ -541,7 +532,7 @@ fun PlayerScreen(
             }
         }
 
-        AnimatedVisibility(
+        if (!inPip) AnimatedVisibility(
             visible = controlsVisible && !inPip,
             enter = fadeIn(),
             exit = fadeOut(),
@@ -568,8 +559,6 @@ fun PlayerScreen(
                         tracks = tracks,
                         variants = variants,
                         currentId = currentId,
-                        resizeMode = resizeMode,
-                        onResize = { resizeMode = it; settings.setPlayerResizeMode(it) },
                         onTune = { tuneTo(it) },
                         firstFocus = panelFocus,
                         onDone = { panel = Panel.NONE; interaction++ },
@@ -590,7 +579,7 @@ fun PlayerScreen(
 
                 // Scrolls on a phone in landscape, where every chip doesn't fit across.
                 Row(
-                    Modifier.then(if (touch) Modifier.horizontalScroll(rememberScrollState()) else Modifier),
+                    Modifier.horizontalScroll(rememberScrollState()),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (controller.isSeekable) {
@@ -605,8 +594,7 @@ fun PlayerScreen(
                         selected = false,
                         focusRequester = barFocus,
                     ) {
-                        paused = !paused
-                        controller.player.playWhenReady = !paused
+                        controller.player.playWhenReady = paused
                         interaction++
                     }
                     if (controller.isSeekable) {
@@ -631,9 +619,7 @@ fun PlayerScreen(
                         }
                     }
                     Spacer(Modifier.width(10.dp))
-                    BarChip(Icons.Filled.AspectRatio, stringResource(R.string.player_aspect), panel == Panel.ASPECT) {
-                        panel = if (panel == Panel.ASPECT) Panel.NONE else Panel.ASPECT; interaction++
-                    }
+                    PlayerDisplayControls(settings, onMenuVisibilityChanged = { displayMenuOpen = it }) { interaction++ }
                     Spacer(Modifier.width(10.dp))
                     val recordingThis = activeRecordings.any { it.channelId == currentId }
                     BarChip(
@@ -654,7 +640,7 @@ fun PlayerScreen(
         }
 
         // Left-side transparent channel list — d-pad Left opens it, pick a channel to switch.
-        AnimatedVisibility(
+        if (!inPip) AnimatedVisibility(
             visible = channelListVisible && !inPip,
             enter = fadeIn(),
             exit = fadeOut(),
@@ -764,7 +750,7 @@ private fun ChannelListRow(
     }
 }
 
-private enum class Panel { NONE, SUBTITLES, AUDIO, QUALITY, ASPECT }
+private enum class Panel { NONE, SUBTITLES, AUDIO, QUALITY }
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -775,34 +761,18 @@ private fun OptionPanel(
     tracks: Tracks,
     variants: List<Channel>,
     currentId: Long?,
-    resizeMode: Int,
-    onResize: (Int) -> Unit,
     onTune: (Channel) -> Unit,
     firstFocus: FocusRequester,
     onDone: () -> Unit,
 ) {
     val offLabel = stringResource(R.string.player_subtitles_off)
     val standardLabel = stringResource(R.string.player_quality_standard)
-    val fitLabel = stringResource(R.string.player_aspect_fit)
-    val fillLabel = stringResource(R.string.player_aspect_fill)
-    val stretchLabel = stringResource(R.string.player_aspect_stretch)
     val options: List<Option> = when (panel) {
         Panel.SUBTITLES -> buildSubtitleOptions(controller, settings, tracks, offLabel, onDone)
         Panel.AUDIO -> buildAudioOptions(controller, tracks, onDone)
         Panel.QUALITY -> variants.map { v ->
             Option(v.qualityLabel.ifEmpty { standardLabel }, v.id == currentId) { onTune(v); onDone() }
         }
-        Panel.ASPECT -> listOf(
-            Option(fitLabel, resizeMode == AspectRatioFrameLayout.RESIZE_MODE_FIT) {
-                onResize(AspectRatioFrameLayout.RESIZE_MODE_FIT); onDone()
-            },
-            Option(fillLabel, resizeMode == AspectRatioFrameLayout.RESIZE_MODE_ZOOM) {
-                onResize(AspectRatioFrameLayout.RESIZE_MODE_ZOOM); onDone()
-            },
-            Option(stretchLabel, resizeMode == AspectRatioFrameLayout.RESIZE_MODE_FILL) {
-                onResize(AspectRatioFrameLayout.RESIZE_MODE_FILL); onDone()
-            },
-        )
         Panel.NONE -> emptyList()
     }
 
@@ -810,7 +780,6 @@ private fun OptionPanel(
         Panel.SUBTITLES -> stringResource(R.string.player_subtitles)
         Panel.AUDIO -> stringResource(R.string.player_audio)
         Panel.QUALITY -> stringResource(R.string.player_quality)
-        Panel.ASPECT -> stringResource(R.string.player_aspect_ratio_title)
         Panel.NONE -> ""
     }
 

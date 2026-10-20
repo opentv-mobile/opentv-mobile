@@ -562,7 +562,7 @@
     <string name="recset_pw_show">पासवर्ड दिखाएँ</string>
     <string name="search_recent">हाल की खोजें</string>
     <string name="search_recent_clear">साफ़ करें</string>
-    <string name="settings_auto_rotate_subtitle">वीडियो हमेशा लैंडस्केप में चलता है। चालू: मेनू और सूचियाँ भी फ़ोन के साथ घूमती हैं (सिस्टम रोटेशन लॉक का पालन करते हुए)।</string>
+    <string name="settings_auto_rotate_subtitle">चालू (डिफ़ॉल्ट): मेनू और सूचियाँ Android की रोटेशन सेटिंग का पालन करते हैं। बंद: फ़ोन नेविगेशन पोर्ट्रेट में रहता है। प्लेयर का रोटेशन अलग से नियंत्रित होता है।</string>
     <string name="settings_auto_rotate_title">फ़ोन के साथ घुमाएँ</string>
     <string name="settings_edit_provider_title">प्रदाता बदलें</string>
     <string name="upd_available">अपडेट उपलब्ध है</string>

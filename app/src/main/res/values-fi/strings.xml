@@ -562,7 +562,7 @@
     <string name="recset_pw_show">Näytä salasana</string>
     <string name="search_recent">Viimeisimmät haut</string>
     <string name="search_recent_clear">Tyhjennä</string>
-    <string name="settings_auto_rotate_subtitle">Video toistetaan aina vaakana. Päällä: myös valikot ja luettelot kääntyvät puhelimen mukana (järjestelmän kiertolukkoa noudattaen).</string>
+    <string name="settings_auto_rotate_subtitle">Päällä (oletus): valikot ja luettelot seuraavat Androidin kiertoasetusta. Pois: puhelimen navigointi pysyy pystysuunnassa. Soittimen kiertoa hallitaan erikseen.</string>
     <string name="settings_auto_rotate_title">Kierrä puhelimen mukana</string>
     <string name="settings_edit_provider_title">Muokkaa palveluntarjoajaa</string>
     <string name="upd_available">Päivitys saatavilla</string>

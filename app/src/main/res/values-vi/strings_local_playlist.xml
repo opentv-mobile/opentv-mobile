@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">URL danh sách phát</string>
+    <string name="local_playlist_file">Tệp cục bộ</string>
+    <string name="local_playlist_choose">Chọn tệp M3U</string>
+    <string name="local_playlist_import">Nhập</string>
+    <string name="local_playlist_reimport">Nhập lại</string>
+    <string name="local_playlist_importing">Đang nhập danh sách phát…</string>
+    <string name="local_playlist_selected">Đã chọn tệp mới</string>
+    <string name="local_playlist_help">Nhập danh sách IPTV .m3u hoặc .m3u8 (tối đa 50 MiB). Chỉ hỗ trợ URL luồng từ xa, không hỗ trợ nội dung cục bộ hoặc tệp kê khai HLS. Một bản sao riêng được lưu; thay đổi cần nhập lại. Chỉ định URL lịch chương trình nếu cần.</string>
+    <string name="local_playlist_error">Không thể nhập. Chọn danh sách IPTV M3U hợp lệ và không rỗng. Danh sách trước đó không thay đổi.</string>
+    <string name="local_playlist_too_large">Danh sách phát vượt quá 50 MiB. Danh sách trước đó không thay đổi.</string>
+    <string name="local_playlist_remote_only">Dùng danh sách kênh IPTV với URL từ xa tuyệt đối, không phải tệp kê khai HLS hay nội dung cục bộ. Danh sách trước đó không thay đổi.</string>
+</resources>

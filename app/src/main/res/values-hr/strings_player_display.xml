@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">Veličina videozapisa</string>
+    <string name="player_display_fit">Prilagodi</string>
+    <string name="player_display_fill">Ispuni (obreži)</string>
+    <string name="player_display_stretch">Rastegni</string>
+    <string name="player_display_orientation">Orijentacija</string>
+    <string name="player_display_landscape">Vodoravno</string>
+    <string name="player_display_portrait">Okomito</string>
+    <string name="player_display_system">Otključaj (prati sustav)</string>
+    <string name="player_display_lock">Zaključaj trenutačnu orijentaciju</string>
+</resources>

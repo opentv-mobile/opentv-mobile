@@ -61,7 +61,15 @@ class OpenTvApp : Application(), ImageLoaderFactory {
         val graph = ServiceLocator.get(this)
         app.opentv.player.PlaybackErrors.context = this
         app.opentv.core.AppText.init(this)
+        app.opentv.widget.RecentWidgetUpdates.start(this, appScope)
         SyncWorker.schedule(this)
+        appScope.launch(Dispatchers.IO) {
+            runCatching {
+                val store = graph.localPlaylistStore
+                val sources = graph.database.sources().all()
+                store.reconcileStartup(sources.mapNotNull { it.localPlaylistFileName }.toSet())
+            }
+        }
 
         // When the normaliser has moved on since the catalogue was last processed, re-clean
         // the stored channels and re-run the guide matcher — locally, no re-download. This

@@ -8,6 +8,7 @@ package app.opentv.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalConfiguration
+import android.content.res.Configuration
 
 /**
  * Which shell the app draws. Decided once at the root and read anywhere via [LocalLayoutClass],
@@ -24,6 +25,11 @@ enum class LayoutClass {
 }
 
 val LocalLayoutClass = staticCompositionLocalOf { LayoutClass.TV }
+
+/** Keep landscape phones in the touch UI, but spend width rather than scarce height on chrome. */
+@Composable
+fun isPhoneLandscape(): Boolean = LocalLayoutClass.current == LayoutClass.PHONE &&
+    LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
 
 /** Phones are anything under the standard 600dp smallest-width tablet breakpoint. */
 @Composable

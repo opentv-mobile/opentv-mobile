@@ -1,0 +1,13 @@
+<resources>
+    <string name="local_playlist_url">URL daftar putar</string>
+    <string name="local_playlist_file">Berkas lokal</string>
+    <string name="local_playlist_choose">Pilih berkas M3U</string>
+    <string name="local_playlist_import">Impor</string>
+    <string name="local_playlist_reimport">Impor ulang</string>
+    <string name="local_playlist_importing">Mengimpor daftar putar…</string>
+    <string name="local_playlist_selected">Berkas baru dipilih</string>
+    <string name="local_playlist_help">Impor daftar IPTV .m3u atau .m3u8 (maksimal 50 MiB). Hanya URL siaran jarak jauh yang didukung, bukan media lokal atau manifes HLS. Salinan pribadi disimpan; perubahan memerlukan impor ulang. Tentukan URL panduan jika diperlukan.</string>
+    <string name="local_playlist_error">Tidak dapat mengimpor. Pilih daftar IPTV M3U yang valid dan tidak kosong. Daftar putar sebelumnya tidak berubah.</string>
+    <string name="local_playlist_too_large">Daftar putar melebihi 50 MiB. Daftar putar sebelumnya tidak berubah.</string>
+    <string name="local_playlist_remote_only">Gunakan daftar saluran IPTV dengan URL jarak jauh absolut, bukan manifes HLS atau media lokal. Daftar putar sebelumnya tidak berubah.</string>
+</resources>

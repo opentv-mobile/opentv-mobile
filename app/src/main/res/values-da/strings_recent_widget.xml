@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Seneste kanaler</string>
+    <string name="recent_widget_description">Hurtig adgang til kanaler, du har set for nylig</string>
+    <string name="recent_widget_empty">Ingen seneste kanaler. Tryk for at åbne OpenTV.</string>
+</resources>

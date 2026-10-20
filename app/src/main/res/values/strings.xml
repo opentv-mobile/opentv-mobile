@@ -625,5 +625,5 @@
     <string name="upd_failed_body">Could not download the update. Check the connection and try again.</string>
     <string name="upd_available_body">%1$s %2$s is available. You have %3$s.</string>
     <string name="settings_auto_rotate_title">Rotate with the phone</string>
-    <string name="settings_auto_rotate_subtitle">Video always plays in landscape. On: menus and lists also turn with the phone (following the system rotation lock).</string>
+    <string name="settings_auto_rotate_subtitle">On (default): menus and lists follow Android’s rotation setting. Off: keep phone navigation in portrait. Player rotation is controlled separately.</string>
 </resources>

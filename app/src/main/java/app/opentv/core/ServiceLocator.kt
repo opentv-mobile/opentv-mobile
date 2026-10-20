@@ -83,7 +83,11 @@ object ServiceLocator {
         val stremioClient: StremioClient by lazy { StremioClient(httpClient) }
 
         val sourceRepository: SourceRepository by lazy {
-            SourceRepository(database.sources(), xtreamApi, stalkerApi)
+            SourceRepository(database.sources(), xtreamApi, stalkerApi, database)
+        }
+
+        val localPlaylistStore by lazy {
+            app.opentv.data.local.LocalPlaylistStore(java.io.File(appContext.filesDir, "local-playlists"))
         }
 
         val catalogRepository: CatalogRepository by lazy {
@@ -99,6 +103,8 @@ object ServiceLocator {
                 stalkerApi = stalkerApi,
                 http = httpClient,
                 settings = settings,
+                database = database,
+                localPlaylists = localPlaylistStore,
             )
         }
 

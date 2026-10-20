@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">قائمة</string>
+    <string name="phone_guide_guide">دليل البرامج</string>
+    <string name="phone_guide_layout">عرض البث المباشر على الهاتف</string>
+    <string name="phone_guide_now">الآن</string>
+    <string name="phone_guide_previous_day">اليوم السابق</string>
+    <string name="phone_guide_next_day">اليوم التالي</string>
+    <string name="phone_guide_details">التفاصيل</string>
+</resources>

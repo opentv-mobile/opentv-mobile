@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="player_display_size">Velikost videa</string>
+    <string name="player_display_fit">Přizpůsobit</string>
+    <string name="player_display_fill">Vyplnit (oříznout)</string>
+    <string name="player_display_stretch">Roztáhnout</string>
+    <string name="player_display_orientation">Orientace</string>
+    <string name="player_display_landscape">Na šířku</string>
+    <string name="player_display_portrait">Na výšku</string>
+    <string name="player_display_system">Odemknout (podle systému)</string>
+    <string name="player_display_lock">Zamknout aktuální orientaci</string>
+</resources>

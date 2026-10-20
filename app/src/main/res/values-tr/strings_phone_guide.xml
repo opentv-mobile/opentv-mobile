@@ -1,0 +1,9 @@
+<resources>
+    <string name="phone_guide_list">Liste</string>
+    <string name="phone_guide_guide">Rehber</string>
+    <string name="phone_guide_layout">Telefonda canlı TV görünümü</string>
+    <string name="phone_guide_now">Şimdi</string>
+    <string name="phone_guide_previous_day">Önceki gün</string>
+    <string name="phone_guide_next_day">Sonraki gün</string>
+    <string name="phone_guide_details">Ayrıntılar</string>
+</resources>

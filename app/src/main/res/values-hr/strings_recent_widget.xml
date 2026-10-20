@@ -1,0 +1,5 @@
+<resources>
+    <string name="recent_widget_title">Nedavni kanali</string>
+    <string name="recent_widget_description">Brzi pristup nedavno gledanim kanalima</string>
+    <string name="recent_widget_empty">Nema nedavnih kanala. Dodirnite za otvaranje aplikacije OpenTV.</string>
+</resources>

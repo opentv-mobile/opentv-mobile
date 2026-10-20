@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   release:
-    name: Build and publish APK
+    name: Build signed APK and publish tags
     runs-on: ubuntu-latest
 
     steps:
@@ -25,20 +25,26 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Unit tests
-        run: ./gradlew test
-
-      # Only runs if a keystore has been added to repository secrets. Without one the
-      # release build falls back to the debug key, which still produces an installable
-      # APK — see docs/RELEASING.md.
-      # The secrets context is not usable directly in an `if:`, so it is lifted into env first.
-      - name: Decode signing keystore
+      - name: Require signing secrets and decode keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-        if: env.KEYSTORE_BASE64 != ''
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
+          for name in KEYSTORE_BASE64 KEYSTORE_PASSWORD KEY_ALIAS KEY_PASSWORD; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Required signing secret is missing: $name"
+              exit 1
+            fi
+          done
+          umask 077
           printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.jks"
+          test -s "$RUNNER_TEMP/upload.jks"
           echo "KEYSTORE_PATH=$RUNNER_TEMP/upload.jks" >> "$GITHUB_ENV"
+
+      - name: Unit tests
+        run: ./gradlew test
 
       - name: Assemble release APK
         env:
@@ -53,6 +59,9 @@ jobs:
         id: artifact
         run: |
           TAG="${GITHUB_REF_NAME}"
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            TAG="candidate-${GITHUB_RUN_NUMBER}"
+          fi
           SOURCE=$(find app/build/outputs/apk/release -name '*.apk' | head -1)
           if [ -z "$SOURCE" ]; then
             echo "::error::No APK was produced by assembleRelease"
@@ -62,9 +71,18 @@ jobs:
           cp "$SOURCE" "dist/opentv-mobile-${TAG}.apk"
           cp "$SOURCE" "dist/opentv-mobile.apk"
           echo "path=dist/opentv-mobile-${TAG}.apk" >> "$GITHUB_OUTPUT"
-          echo "signed=$([ -n "$KEYSTORE_PATH" ] && echo yes || echo debug-key)" >> "$GITHUB_OUTPUT"
+          echo "signed=yes" >> "$GITHUB_OUTPUT"
+
+      - name: Upload signed candidate APK
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: opentv-mobile-signed-candidate
+          path: dist/*.apk
+          if-no-files-found: error
 
       - name: Release notes from CHANGELOG
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
           awk -v v="$VERSION" '$0 ~ ("^## " v "([^0-9]|$)"){f=1;next} /^## /{f=0} f{print}' CHANGELOG.md > release-notes.md
@@ -76,6 +94,7 @@ jobs:
           } >> release-notes.md
 
       - name: Publish release
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: dist/*.apk
