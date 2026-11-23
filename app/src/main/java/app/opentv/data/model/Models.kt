@@ -174,7 +174,11 @@ data class Channel(
      * id pointing at a guide the provider never ships must not shadow a working match.
      */
     val epgCandidates: List<String>
-        get() = listOfNotNull(epgOverrideId, epgChannelId, matchedEpgId)
+        get() = listOfNotNull(
+            epgOverrideId,
+            epgChannelId?.takeUnless { it.trim().isEmpty() || it.trim().equals("NULL", ignoreCase = true) },
+            matchedEpgId,
+        ).distinct()
 }
 
 /** What the UI should show for a channel: the user's rename if set, else the cleaned display name. */
@@ -210,7 +214,7 @@ data class EpgFeed(
  */
 @Entity(
     tableName = "epg_channels",
-    primaryKeys = ["feedId", "epgId"],
+    primaryKeys = ["feedId", "epgId", "normalizedKey"],
     indices = [Index(value = ["normalizedKey"])],
 )
 data class EpgChannelAlias(

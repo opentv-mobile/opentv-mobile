@@ -9,6 +9,7 @@ import app.opentv.R
 import app.opentv.core.AppText
 import android.util.Log
 import app.opentv.data.db.ChannelDao
+import app.opentv.data.db.OpenTvDatabase
 import app.opentv.data.db.EpgChannelAliasDao
 import app.opentv.data.db.EpgFeedDao
 import app.opentv.data.db.ProgrammeDao
@@ -32,6 +33,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
+import androidx.room.withTransaction
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -69,6 +71,7 @@ class EpgRepository(
     private val sourceDao: SourceDao,
     private val api: XtreamApi,
     private val http: OkHttpClient,
+    private val database: OpenTvDatabase,
     /** Remembers when the matcher last ran (and its result) so a launch with nothing new skips it. */
     private val prefs: android.content.SharedPreferences? = null,
 ) {
@@ -124,9 +127,18 @@ class EpgRepository(
     suspend fun removeFeed(feed: EpgFeed) {
         // A removed feed takes its guide data with it — orphaned programmes would otherwise
         // keep matching channels forever with content that never refreshes.
-        programmeDao.deleteForFeed(feed.id)
-        aliasDao.deleteForFeed(feed.id)
-        feedDao.delete(feed.id)
+        database.withTransaction {
+            programmeDao.deleteForFeed(feed.id)
+            aliasDao.deleteForFeed(feed.id)
+            feedDao.delete(feed.id)
+        }
+        // Rebuild only after every delete succeeds so a failure cannot publish a partial
+        // matcher refresh or advance the guide change signal.
+        val (matched, total) = runMatcher()
+        prefs?.edit()
+            ?.putInt(PREF_MATCHED, matched)
+            ?.putInt(PREF_MATCH_TOTAL, total)
+            ?.apply()
         guideChanged()
     }
 
@@ -266,12 +278,13 @@ class EpgRepository(
                     programmeDao.upsertAll(batch)
                     written += batch.size
                 }
-                if (aliases.isNotEmpty()) {
-                    aliases.chunked(BATCH_SIZE).forEach { aliasDao.upsertAll(it) }
-                }
-
                 if (written == 0 && stats.programmeCount == 0) {
                     return FeedResult.Failed(AppText.get(R.string.err_guide_empty))
+                }
+
+                database.withTransaction {
+                    aliasDao.deleteForFeed(feed.id)
+                    aliases.chunked(BATCH_SIZE).forEach { aliasDao.upsertAll(it) }
                 }
                 return FeedResult.Success(written, stats.channelCount)
             }
@@ -338,11 +351,28 @@ class EpgRepository(
      */
     suspend fun runMatcher(): Pair<Int, Int> {
         val aliases = aliasDao.all()
-        val index = EpgMatcher.buildIndex(aliases.map { it.epgId to it.displayName })
+        val matcherAliases = aliases.map { it.epgId to it.displayName }
+        val populated = programmeDao.channelIdsWithProgrammes().toHashSet()
+        val collisionGroups = EpgMatcher.exactCollisionGroups(matcherAliases)
+        val collidingIds = collisionGroups.flatten().distinct()
+        val schedules = collidingIds.chunked(900)
+            .flatMap { programmeDao.scheduleEntriesForChannels(it) }
+            .groupBy { it.epgChannelId }
+            .mapValues { (_, rows) -> rows.map { ProgrammeScheduleEquivalence.Entry(it.title, it.startUtcMillis, it.endUtcMillis) } }
+        val equivalentCanonicalIds = HashMap<String, String>()
+        for (group in collisionGroups) {
+            val ids = group.sorted()
+            val populatedIds = ids.filter { it in populated }
+            if (populatedIds.size > 1) {
+                val first = schedules[populatedIds.first()].orEmpty()
+                if (populatedIds.drop(1).all { id ->
+                    ProgrammeScheduleEquivalence.areEquivalent(first, schedules[id].orEmpty())
+                }) populatedIds.forEach { equivalentCanonicalIds[it] = populatedIds.first() }
+            }
+        }
+        val index = EpgMatcher.buildIndex(matcherAliases, equivalentCanonicalIds, populated)
         // Only ids that actually have programmes count as "working" — a match against a
         // channel the guide lists but never fills is a guide that looks broken.
-        val populated = programmeDao.channelIdsWithProgrammes().toHashSet()
-
         val channels = channelDao.allForMatching()
         var matched = 0
 

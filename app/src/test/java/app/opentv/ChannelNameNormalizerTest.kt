@@ -41,6 +41,36 @@ class ChannelNameNormalizerTest {
     }
 
     @Test
+    fun `FULL HD is the FULLHD resolution token`() {
+        val spaced = ChannelNameNormalizer.normalize("M. LaLiga FULL HD")
+        val joined = ChannelNameNormalizer.normalize("M. LaLiga FULLHD")
+
+        assertThat(spaced.groupKey).isEqualTo("mlaliga")
+        assertThat(spaced.groupKey).isEqualTo(joined.groupKey)
+        assertThat(spaced.qualityRank).isEqualTo(300)
+        assertThat(spaced.qualityLabel).isEqualTo("FULLHD")
+    }
+
+    @Test
+    fun `FULL remains when it is not followed by HD`() {
+        val n = ChannelNameNormalizer.normalize("FULL Channel 2 HD")
+
+        assertThat(n.baseName).isEqualTo("FULL Channel 2")
+        assertThat(n.groupKey).isEqualTo("fullchannel2")
+        assertThat(n.qualityRank).isEqualTo(200)
+    }
+
+    @Test
+    fun `FULL HD normalization preserves channel numbers`() {
+        val two = ChannelNameNormalizer.normalize("M+ LCAMPEONES 2 FULL HD")
+        val ten = ChannelNameNormalizer.normalize("M+ LCAMPEONES 10 FULL HD")
+
+        assertThat(two.groupKey).isEqualTo("mlcampeones2")
+        assertThat(ten.groupKey).isEqualTo("mlcampeones10")
+        assertThat(two.groupKey).isNotEqualTo(ten.groupKey)
+    }
+
+    @Test
     fun `provider name meets the guide name in the middle`() {
         val provider = ChannelNameNormalizer.normalize("UK| BBC ONE FHD").groupKey
         val guide = ChannelNameNormalizer.groupKeyOf("BBC One")

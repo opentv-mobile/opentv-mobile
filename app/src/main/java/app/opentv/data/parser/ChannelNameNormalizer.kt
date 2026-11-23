@@ -132,6 +132,9 @@ object ChannelNameNormalizer {
     fun normalize(raw: String): Normalized {
         // Fold superscript decorations (ᴴᴰ → HD) so the token pass can see them.
         var working = foldSuperscripts(raw.trim())
+        // Treat the two-word resolution label like FULLHD before tokenisation.
+        // Standalone FULL remains part of legitimate channel names.
+        working = working.replace(Regex("\\bFULL\\s+HD\\b", RegexOption.IGNORE_CASE), "FULLHD")
 
         // Country prefix BEFORE decoration stripping: the brackets in `[UK]` are the
         // delimiter, and the decoration pass would eat them and lose the tag.

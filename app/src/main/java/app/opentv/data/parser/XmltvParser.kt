@@ -39,7 +39,7 @@ object XmltvParser {
     )
 
     /**
-     * @param onChannelAlias called with (channelId, displayName) for each `<channel>` element.
+     * @param onChannelAlias called with (channelId, displayName) for every `<display-name>`.
      * @param onProgramme called for each successfully parsed `<programme>`.
      *
      * [onProgramme] is a suspending callback, and this function is therefore suspending too.
@@ -71,10 +71,11 @@ object XmltvParser {
                 when (parser.name) {
                     "channel" -> {
                         val id = parser.getAttributeValue(null, "id")
-                        val displayName = readChannelDisplayName(parser)
+                        val displayNames = readChannelDisplayNames(parser)
                         if (!id.isNullOrBlank()) {
                             channelCount++
-                            onChannelAlias(id, displayName)
+                            if (displayNames.isEmpty()) onChannelAlias(id, null)
+                            else displayNames.forEach { onChannelAlias(id, it) }
                         }
                     }
 
@@ -95,23 +96,23 @@ object XmltvParser {
         return Stats(channelCount, programmeCount, skipped)
     }
 
-    private fun readChannelDisplayName(parser: XmlPullParser): String? {
-        var displayName: String? = null
+    private fun readChannelDisplayNames(parser: XmlPullParser): List<String> {
+        val displayNames = linkedSetOf<String>()
         var depth = 1
         while (depth > 0) {
             when (parser.next()) {
                 XmlPullParser.START_TAG -> {
                     depth++
-                    if (parser.name == "display-name" && displayName == null) {
-                        displayName = parser.nextText().trim().takeIf { it.isNotEmpty() }
+                    if (parser.name == "display-name") {
+                        parser.nextText().trim().takeIf { it.isNotEmpty() }?.let(displayNames::add)
                         depth--
                     }
                 }
                 XmlPullParser.END_TAG -> depth--
-                XmlPullParser.END_DOCUMENT -> return displayName
+                XmlPullParser.END_DOCUMENT -> return displayNames.toList()
             }
         }
-        return displayName
+        return displayNames.toList()
     }
 
     private fun readProgramme(parser: XmlPullParser, feedId: Long): Programme? {

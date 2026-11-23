@@ -68,8 +68,17 @@ object EpgMatcher {
      * accept either.
      */
     fun buildIndex(aliases: Iterable<Pair<String, String>>): Index {
+        return buildIndex(aliases, emptyMap())
+    }
+
+    /** Verified exact-key equivalence groups, represented as id -> deterministic canonical id. */
+    fun buildIndex(
+        aliases: Iterable<Pair<String, String>>,
+        equivalentCanonicalIds: Map<String, String>,
+        idsWithProgrammes: Set<String>? = null,
+    ): Index {
         val exact = HashMap<String, String>()
-        val ambiguous = HashSet<String>()
+        val exactIds = HashMap<String, MutableSet<String>>()
         val all = ArrayList<Alias>()
 
         for ((epgId, name) in aliases) {
@@ -80,17 +89,36 @@ object EpgMatcher {
                 val key = ChannelNameNormalizer.normalize(candidate).groupKey
                 if (key.length < MIN_KEY_LENGTH) continue
                 all += Alias(epgId, key)
-                val existing = exact.putIfAbsent(key, epgId)
-                if (existing != null && existing != epgId) {
-                    // Two different guide channels normalise to the same key. Neither can
-                    // be trusted for exact matching; drop the key rather than pick a side.
-                    ambiguous += key
+                exactIds.getOrPut(key) { linkedSetOf() }.add(epgId)
+            }
+        }
+        for ((key, ids) in exactIds) {
+            if (ids.size == 1) exact[key] = ids.first()
+            else {
+                val populatedIds = idsWithProgrammes?.let { available -> ids.filter { it in available }.toSet() }
+                if (populatedIds?.size == 1) {
+                    exact[key] = populatedIds.first()
+                } else {
+                    val candidates = populatedIds ?: ids
+                    val canonicals = candidates.map { equivalentCanonicalIds[it] ?: it }.toSet()
+                    if (candidates.isNotEmpty() && canonicals.size == 1 && candidates.all { it in equivalentCanonicalIds }) {
+                        exact[key] = canonicals.first()
+                    }
                 }
             }
         }
-        ambiguous.forEach(exact::remove)
 
         return Index(exact, all)
+    }
+
+    /** IDs grouped by normalized exact keys; prefixes are deliberately excluded. */
+    fun exactCollisionGroups(aliases: Iterable<Pair<String, String>>): List<Set<String>> {
+        val idsByKey = HashMap<String, MutableSet<String>>()
+        for ((id, name) in aliases) for (candidate in listOf(name, id)) {
+            val key = ChannelNameNormalizer.normalize(candidate).groupKey
+            if (key.length >= MIN_KEY_LENGTH) idsByKey.getOrPut(key) { linkedSetOf() }.add(id)
+        }
+        return idsByKey.values.filter { it.size > 1 }.map { it.toSet() }
     }
 
     /**

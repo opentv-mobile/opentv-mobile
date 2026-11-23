@@ -88,6 +88,7 @@ class XmltvChannelParseTest {
 
         assertThat(result.aliases).containsExactly(
             "BBCOne.uk" to "BBC One",
+            "BBCOne.uk" to "101",
             "ITV1.uk" to "ITV1",
         )
         assertThat(result.stats.channelCount).isEqualTo(2)

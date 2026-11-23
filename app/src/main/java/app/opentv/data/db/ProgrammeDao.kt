@@ -13,6 +13,15 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProgrammeDao {
+    /** Minimal schedule rows for equivalence checks; retains duplicates across feeds. */
+    @Query("""
+        SELECT epgChannelId, title, startUtcMillis, endUtcMillis
+        FROM programmes
+        WHERE epgChannelId IN (:channelIds)
+        ORDER BY epgChannelId, startUtcMillis
+    """)
+    suspend fun scheduleEntriesForChannels(channelIds: List<String>): List<ProgrammeScheduleEntry>
+
     @Query("""
         SELECT * FROM programmes
         WHERE epgChannelId IN (:channelIds)
@@ -104,3 +113,11 @@ interface ProgrammeDao {
 }
 
 data class PhoneGuideHorizon(val start: Long?, val end: Long?)
+
+/** Lightweight Room projection used when comparing XMLTV schedules. */
+data class ProgrammeScheduleEntry(
+    val epgChannelId: String,
+    val title: String,
+    val startUtcMillis: Long,
+    val endUtcMillis: Long,
+)
