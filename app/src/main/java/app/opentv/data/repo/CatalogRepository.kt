@@ -664,8 +664,14 @@ class CatalogRepository(
             if (settings.liveEnabled.value) syncLive(source, nowUtcMillis)
             else SyncResult.Success(0, 0, 0)
         if (live is SyncResult.Success && source.kind == SourceKind.XTREAM) {
-            runCatching { syncXtreamVod(source, nowUtcMillis) }
-                .onFailure { Log.w(TAG, "VOD sync failed for source ${source.id}", it) }
+            try {
+                syncXtreamVod(source, nowUtcMillis)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.w(TAG, "VOD sync failed for source ${source.id}", e)
+                return@withContext SyncResult.Failed(e.message ?: AppText.get(R.string.err_catalogue_download), e)
+            }
         }
         live
     }
@@ -687,11 +693,18 @@ class CatalogRepository(
         }
     }
 
-    /** Movies + series — best-effort, meant to run in the background so a huge VOD list never
-     * blocks live TV. Silent on failure: an account with no VOD is normal, not an error. */
+    /** Movies + series, meant to run in the background so a huge VOD list never blocks live TV. */
     suspend fun syncVod(source: Source, nowUtcMillis: Long) = withContext(BackgroundWork.dispatcher) {
-        runCatching { if (source.kind == SourceKind.XTREAM) syncXtreamVod(source, nowUtcMillis) }
-            .onFailure { Log.w(TAG, "VOD sync failed for source ${source.id}", it) }
+        if (source.kind == SourceKind.XTREAM) {
+            try {
+                syncXtreamVod(source, nowUtcMillis)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.w(TAG, "VOD sync failed for source ${source.id}", e)
+                throw e
+            }
+        }
     }
 
     private suspend fun syncXtreamLive(source: Source, nowUtcMillis: Long): SyncResult {
@@ -757,20 +770,16 @@ class CatalogRepository(
         val seriesOn = settings.seriesEnabled.value
         if (!moviesOn && !seriesOn) return
 
-        val movieCategories =
-            if (moviesOn) runCatching { api.movieCategories(source) }.getOrDefault(emptyList())
-            else emptyList()
-        val seriesCategories =
-            if (seriesOn) runCatching { api.seriesCategories(source) }.getOrDefault(emptyList())
-            else emptyList()
+        val movieCategories = if (moviesOn) api.movieCategories(source) else emptyList()
+        val seriesCategories = if (seriesOn) api.seriesCategories(source) else emptyList()
         if (movieCategories.isNotEmpty() || seriesCategories.isNotEmpty()) {
             categoryDao.upsertAll(movieCategories + seriesCategories)
         }
 
         // Written batch by batch as they stream in: holding a big provider's whole library in
         // memory (movies and series at once) crashed phones with an OutOfMemoryError.
-        if (moviesOn) runCatching { api.movies(source) { movieDao.upsertAll(it) } }
-        if (seriesOn) runCatching { api.series(source) { seriesDao.upsertAll(it) } }
+        if (moviesOn) api.movies(source) { movieDao.upsertAll(it) }
+        if (seriesOn) api.series(source) { seriesDao.upsertAll(it) }
     }
 
     private suspend fun syncM3u(source: Source, nowUtcMillis: Long): SyncResult {

@@ -364,8 +364,8 @@ class XtreamApi(
 
     /**
      * Streams a player_api JSON array, calling [onBatch] every [STREAM_BATCH] elements, so memory
-     * stays flat however large the catalogue is. A non-array reply (some panels send `{}` for
-     * "nothing") yields no batches.
+     * stays flat however large the catalogue is. An empty array is a valid empty catalogue;
+     * a missing body or non-array reply is an invalid response and fails the sync.
      */
     // Parsing 180k titles is the heaviest CPU work in the app: background priority (see BackgroundWork).
     @OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
@@ -382,13 +382,14 @@ class XtreamApi(
             .build()
         http.newCall(request(source, url)).execute().use { response ->
             if (!response.isSuccessful) throw XtreamException(describeHttpFailure(response.code))
-            val stream = java.io.BufferedInputStream(response.body?.byteStream() ?: return@use)
+            val body = response.body ?: throw XtreamException(AppText.get(R.string.err_empty_response))
+            val stream = java.io.BufferedInputStream(body.byteStream())
             // Peek at the first non-blank byte: only an array is streamable.
             stream.mark(64)
             var first: Int
             do { first = stream.read() } while (first != -1 && first.toChar().isWhitespace())
             stream.reset()
-            if (first != '['.code) return@use
+            if (first != '['.code) throw XtreamException(AppText.get(R.string.err_not_catalogue))
             val batch = ArrayList<JsonElement>(STREAM_BATCH)
             for (element in json.decodeToSequence(stream, JsonElement.serializer(), kotlinx.serialization.json.DecodeSequenceMode.ARRAY_WRAPPED)) {
                 batch += element

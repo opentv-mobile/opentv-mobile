@@ -6,6 +6,7 @@
 package app.opentv.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -29,6 +30,7 @@ import app.opentv.data.repo.GenreGroup
 import app.opentv.data.repo.MovieVariantGroup
 import app.opentv.data.repo.PersonTitle
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -308,6 +310,7 @@ class VodViewModel(app: Application) : AndroidViewModel(app) {
     fun ensureVodLoaded() {
         if (vodRequested) return
         vodRequested = true
+        _vodLoading.value = true
         viewModelScope.launch { syncVodIfStale(force = false) }
     }
 
@@ -318,6 +321,7 @@ class VodViewModel(app: Application) : AndroidViewModel(app) {
      */
     fun refreshVod() {
         vodRequested = true
+        _vodLoading.value = true
         viewModelScope.launch { syncVodIfStale(force = true) }
     }
 
@@ -330,30 +334,39 @@ class VodViewModel(app: Application) : AndroidViewModel(app) {
         // the live preview into buffering. When we synced recently and already have rows, skip the
         // network entirely and just (re)build the home shelves off what is stored.
         if (!force) {
+            val moviesEnabled = settings.moviesEnabled.value
+            val seriesEnabled = settings.seriesEnabled.value
             val haveCatalogue = runCatching {
-                graph.catalogRepository.movieCount() + graph.catalogRepository.seriesCount()
-            }.getOrDefault(0) > 0
+                (!moviesEnabled || graph.catalogRepository.movieCount() > 0) &&
+                    (!seriesEnabled || graph.catalogRepository.seriesCount() > 0)
+            }.getOrDefault(false)
             val last = settings.vodSyncedAtMillis
             val fresh = last > 0 && now - last < VOD_TTL_MILLIS
             if (haveCatalogue && fresh) {
+                _vodLoading.value = false
                 loadHomeFeeds()
                 return
             }
         }
 
         _vodLoading.value = true
-        val synced = StatusBus.during(AppText.get(R.string.msg_loading_vod)) {
-            runCatching {
+        try {
+            StatusBus.during(AppText.get(R.string.msg_loading_vod)) {
                 for (source in graph.sourceRepository.enabled()) {
                     graph.catalogRepository.syncVod(source, now)
                 }
-            }.isSuccess
+            }
+            settings.vodSyncedAtMillis = now
+            loadedHomeFeeds = null
+        } catch (e: CancellationException) {
+            vodRequested = false
+            throw e
+        } catch (e: Exception) {
+            vodRequested = false
+            Log.w("VodViewModel", "VOD sync failed", e)
+        } finally {
+            _vodLoading.value = false
         }
-        _vodLoading.value = false
-        // Stamp the cache only when the fetch actually succeeded, so a failed sync retries on the
-        // next open instead of being remembered as "fresh" and leaving the user with no catalogue.
-        if (synced) settings.vodSyncedAtMillis = now
-        if (synced) loadedHomeFeeds = null
         // The catalogue may have grown — recompute the computed home rows off the fresh data.
         loadHomeFeeds()
     }
